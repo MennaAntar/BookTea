@@ -3,10 +3,8 @@
     public class Order
     {
         public int Id { get; set; }
-        public int Cost { get; set; }
+        public int TotalCost { get; set; }
         public DateTime RequestDate { get; set; }
-
-        public List<OrderLine>? OrderLines { get; set; }
 
         //FK
         public int ShippingCompanyId { get; set; }
@@ -14,5 +12,8 @@
         //FK
         public int CustomerId { get; set; }
         public Customer? Customer { get; set; }
+
+        public Payment? Payment { get; set; }
+        public List<OrderLine>? OrderLines { get; set; }
     }
 }

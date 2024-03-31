@@ -1,11 +1,11 @@
 ﻿namespace BookTea.Models
 {
-    public class Producer
+    public class PublishingHouse
     {
         public int Id { get; set; }
         public string? Name { get; set; }
         public string? Country { get; set; }
 
-        public List<Product>? Products { get; set; }
+        public List<Book>? Books { get; set; }
     }
 }

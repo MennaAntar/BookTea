@@ -7,8 +7,8 @@
         public int ProductQuantityRequired { get; set; }
 
         //FK
-        public int ProductId { get; set; }
-        public Product? Product { get; set; }
+        public int BookId { get; set; }
+        public Book? Book { get; set; }
         //FK
         public int OrderId { get; set; }
         public Order? Order { get; set; }

@@ -8,7 +8,7 @@
         public int Weight { get; set; }
         public string? Destination { get; set; }
 
-        public CostSpecification? CostSpecification { get; set; }
+        public List<CostSpecification>? CostSpecifications { get; set; }
 
         public List<Order>? Orders { get; set; }
     }

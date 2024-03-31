@@ -10,8 +10,6 @@
         public string? Address { get; set;}
         public string? Country { get; set; }
 
-        public List<Invoice>? Invoices { get; set; }
-        public List<Payment>? Payments { get; set; }
         public List<Order>? Orders { get; set; }
     }
 }
