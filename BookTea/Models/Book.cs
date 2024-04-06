@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace BookTea.Models
 {
@@ -10,6 +11,7 @@ namespace BookTea.Models
         public double Price { get; set; }
 
         public string? PhotoUrl { get; set; }
+        [NotMapped]
         public IFormFile? ImageFile { get; set; }
 
         public int Rating { get; set; }

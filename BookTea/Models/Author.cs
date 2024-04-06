@@ -1,4 +1,6 @@
-﻿namespace BookTea.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace BookTea.Models
 {
     public class Author
     {
@@ -10,6 +12,7 @@
         public string? Nationality { get; set; }
 
         public string? PhotoUrl { get; set; }
+        [NotMapped]
         public IFormFile? ImageFile { get; set; }
 
         public List<BookAuthor>? BookAuthors { get; set; }

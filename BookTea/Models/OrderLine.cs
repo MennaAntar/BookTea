@@ -1,7 +1,10 @@
-﻿namespace BookTea.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BookTea.Models
 {
     public class OrderLine
     {
+        [Key]
         public int OL_Id { get; set; }
         public int TotalProductPrice { get; set; }
         public int ProductQuantityRequired { get; set; }
