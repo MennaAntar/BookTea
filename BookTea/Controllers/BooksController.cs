@@ -13,10 +13,12 @@ namespace BookTea.Controllers
     public class BooksController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHost;
 
-        public BooksController(ApplicationDbContext context)
+        public BooksController(ApplicationDbContext context, IWebHostEnvironment webHost)
         {
             _context = context;
+            _webHost = webHost;
         }
 
         // GET: Books
@@ -57,10 +59,11 @@ namespace BookTea.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ISBN,Title,Price,PhotoUrl,Rating,Description,Quantity,PublishingHouseId")] Book book)
+        public async Task<IActionResult> Create([Bind("ISBN,Title,Price,ImageFile,Rating,Description,Quantity,PublishingHouseId")] Book book)
         {
             if (ModelState.IsValid)
             {
+                book.PhotoUrl = UploadImage(book);
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -91,7 +94,7 @@ namespace BookTea.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ISBN,Title,Price,PhotoUrl,Rating,Description,Quantity,PublishingHouseId")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("ISBN,Title,Price,ImageFile,Rating,Description,Quantity,PublishingHouseId")] Book book)
         {
             if (id != book.ISBN)
             {
@@ -102,6 +105,11 @@ namespace BookTea.Controllers
             {
                 try
                 {
+                    if (book.ImageFile != null)
+                    {
+                        string uniqueFileName = UploadImage(book);
+                        book.PhotoUrl = uniqueFileName;
+                    }
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
@@ -163,6 +171,22 @@ namespace BookTea.Controllers
         private bool BookExists(int id)
         {
           return (_context.Books?.Any(e => e.ISBN == id)).GetValueOrDefault();
+        }
+
+        private string UploadImage(Book book)
+        {
+            string uniqueFileName = null;
+            if (book.ImageFile != null)
+            {
+                string uploadsFolder = Path.Combine(_webHost.WebRootPath, "images"); //بيجيب فولدر الصور اللي هتنزل عليه
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + book.ImageFile.FileName; //اسم الملف الاصلي
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName); //لما بيدمج الاتنين بيكون دا مكان الصورة الجديد
+                using (var fileStream = new FileStream(filePath, FileMode.Create)) //بينقل الصورة للمكان الجديد
+                {
+                    book.ImageFile.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
         }
     }
 }
