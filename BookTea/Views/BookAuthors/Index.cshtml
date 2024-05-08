@@ -4,7 +4,21 @@
     ViewData["Title"] = "Index";
 }
 
+@if (Model == null || Model.Count() == 0)
+{
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Empty!!!</h4>
+        <hr>
+        <a asp-action="Create">Create New</a>
+    </div>
+}
+else{
 <h1>Index</h1>
+
+    <form asp-action="Index" method="get">
+        <input style="width:400px" name="term" class="d-inline form-control" placeholder="Search...." type="text" />
+        <button type="submit" class="d-inline btn btn-outline-primary">Search</button>
+    </form>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -28,7 +42,7 @@
                 @Html.DisplayFor(modelItem => item.Book.ISBN)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author.Id)
+                @Html.DisplayFor(modelItem => item.Author.I)
             </td>
             <td>
                 @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
@@ -39,3 +53,4 @@
 }
     </tbody>
 </table>
+}

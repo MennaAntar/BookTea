@@ -23,11 +23,16 @@ namespace BookTea.Controllers
         }
 
         // GET: Authors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-              return _context.Authors != null ? 
-                          View(await _context.Authors.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Authors'  is null.");
+            var author = await _context.Authors.ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                author = author.Where(a => a.Id.ToString().Contains(term) || a.Nationality.Contains(term) || a.LastName.Contains(term)|| a.FirstName.Contains(term)).ToList();
+
+            }
+
+            return View(author);
         }
 
         // GET: Authors/Details/5
