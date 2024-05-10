@@ -1,10 +1,14 @@
-﻿namespace BookTea.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace BookTea.Models
 {
     public class Customer
     {
         public int Id { get; set; }
+        
         public string? Password { get; set; }
         public string? Name { get; set; }
+        [EmailAddress(ErrorMessage ="Unvalid email")]
         public string? Email { get; set; }
         public DateTime? DateOfBirth { get; set; }
         public string? Address { get; set;}

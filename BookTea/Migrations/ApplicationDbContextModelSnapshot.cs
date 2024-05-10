@@ -50,7 +50,7 @@ namespace BookTea.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors");
+                    b.ToTable("Authors", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.Book", b =>
@@ -86,7 +86,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("PublishingHouseId");
 
-                    b.ToTable("Books");
+                    b.ToTable("Books", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.BookAuthor", b =>
@@ -101,7 +101,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("BooksAuthors");
+                    b.ToTable("BooksAuthors", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.CostSpecification", b =>
@@ -125,7 +125,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("ShippingCompanyId");
 
-                    b.ToTable("CostsSpecifications");
+                    b.ToTable("CostsSpecifications", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.Customer", b =>
@@ -156,7 +156,7 @@ namespace BookTea.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers");
+                    b.ToTable("Customers", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.Order", b =>
@@ -185,7 +185,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("ShippingCompanyId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Orders", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.OrderLine", b =>
@@ -214,7 +214,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderLines");
+                    b.ToTable("OrderLines", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.Payment", b =>
@@ -242,7 +242,7 @@ namespace BookTea.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Payments");
+                    b.ToTable("Payments", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.PublishingHouse", b =>
@@ -261,7 +261,7 @@ namespace BookTea.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PublishingHouses");
+                    b.ToTable("PublishingHouses", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.ShippingCompany", b =>
@@ -286,7 +286,7 @@ namespace BookTea.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShippingCompanies");
+                    b.ToTable("ShippingCompanies", (string)null);
                 });
 
             modelBuilder.Entity("BookTea.Models.Book", b =>

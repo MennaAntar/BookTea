@@ -28,7 +28,7 @@ namespace BookTea.Controllers
             var author = await _context.Authors.ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
-                author = author.Where(a => a.Id.ToString().Contains(term) || a.Nationality.Contains(term) || a.LastName.Contains(term)|| a.FirstName.Contains(term)).ToList();
+                author = author.Where(a => a.Id.ToString().Contains(term)|| a.DateOfBirth.ToString().Contains(term)|| a.DateOfDeath.ToString().Contains(term) || a.Nationality.Contains(term) || a.LastName.Contains(term)|| a.FirstName.Contains(term)).ToList();
 
             }
 

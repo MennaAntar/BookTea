@@ -20,11 +20,17 @@ namespace BookTea.Controllers
         }
 
         // GET: ShippingCompanies
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-              return _context.ShippingCompanies != null ? 
-                          View(await _context.ShippingCompanies.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.ShippingCompanies'  is null.");
+            var shipingCompany = await _context.ShippingCompanies.ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                shipingCompany = shipingCompany.Where(a => a.Cost.ToString().Contains(term)
+                || a.Date.ToString().Contains(term) || a.Weight.ToString().Contains(term) || a.Destination.Contains(term)).ToList();
+
+            }
+
+            return View(shipingCompany);
         }
 
         // GET: ShippingCompanies/Details/5

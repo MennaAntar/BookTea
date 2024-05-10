@@ -20,10 +20,16 @@ namespace BookTea.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-            var applicationDbContext = _context.Payments.Include(p => p.Order);
-            return View(await applicationDbContext.ToListAsync());
+            var payments = await _context.Payments.ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                payments = payments.Where(a => a.Cost.ToString().Contains(term)
+                || a.PendingDate.ToString().Contains(term) || a.Date.ToString().Contains(term) || a.OrderId.ToString().Contains(term)).ToList();
+
+            }
+            return View(payments);
         }
 
         // GET: Payments/Details/5

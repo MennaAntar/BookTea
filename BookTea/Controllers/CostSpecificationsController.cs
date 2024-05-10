@@ -20,10 +20,17 @@ namespace BookTea.Controllers
         }
 
         // GET: CostSpecifications
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-            var applicationDbContext = _context.CostsSpecifications.Include(c => c.ShippingCompany);
-            return View(await applicationDbContext.ToListAsync());
+            var costSpecification = await _context.CostsSpecifications.ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                costSpecification = costSpecification.Where(a => a.CityName.Contains(term) || a.DeliveryCost.ToString().Contains(term)
+                || a.ShippingCompanyId.ToString().Contains(term)).ToList();
+
+            }
+
+            return View(costSpecification);
         }
 
         // GET: CostSpecifications/Details/5

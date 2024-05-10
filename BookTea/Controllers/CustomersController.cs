@@ -20,11 +20,17 @@ namespace BookTea.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-              return _context.Customers != null ? 
-                          View(await _context.Customers.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Customers'  is null.");
+            var customer = await _context.Customers.ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                customer = customer.Where(a => a.Name.Contains(term) ||
+                a.Email.Contains(term) || a.DateOfBirth.ToString().Contains(term) || a.Address.Contains(term) || a.Country.Contains(term)).ToList();
+
+            }
+
+            return View(customer);
         }
 
         // GET: Customers/Details/5
