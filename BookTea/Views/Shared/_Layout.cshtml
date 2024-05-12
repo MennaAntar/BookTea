@@ -25,6 +25,12 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="Index">Customer</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="ShippingCompanies" asp-action="Index">Shipping Company</a>
+                        </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                 Books
@@ -43,6 +49,17 @@
                                 <li><a class="dropdown-item" asp-controller="PublishingHouses" asp-action="Create">Create</a></li>
                             </ul>
                         </li>
+                        <!--my order here : Rawan-->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Orders
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" asp-controller="Orders" asp-action="Index">Your Order</a></li>
+                                <li><a class="dropdown-item" asp-controller="OrderLines" asp-action="Index">Your Product Details</a></li>
+                            </ul>
+                        </li>
+                        <!--End my order here : Rawan-->
                     </ul>
                 </div>
             </div>

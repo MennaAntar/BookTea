@@ -50,7 +50,7 @@ namespace BookTea.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Authors", (string)null);
+                    b.ToTable("Authors");
                 });
 
             modelBuilder.Entity("BookTea.Models.Book", b =>
@@ -86,7 +86,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("PublishingHouseId");
 
-                    b.ToTable("Books", (string)null);
+                    b.ToTable("Books");
                 });
 
             modelBuilder.Entity("BookTea.Models.BookAuthor", b =>
@@ -101,7 +101,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("AuthorId");
 
-                    b.ToTable("BooksAuthors", (string)null);
+                    b.ToTable("BooksAuthors");
                 });
 
             modelBuilder.Entity("BookTea.Models.CostSpecification", b =>
@@ -125,7 +125,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("ShippingCompanyId");
 
-                    b.ToTable("CostsSpecifications", (string)null);
+                    b.ToTable("CostsSpecifications");
                 });
 
             modelBuilder.Entity("BookTea.Models.Customer", b =>
@@ -156,7 +156,7 @@ namespace BookTea.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Customers", (string)null);
+                    b.ToTable("Customers");
                 });
 
             modelBuilder.Entity("BookTea.Models.Order", b =>
@@ -185,7 +185,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("ShippingCompanyId");
 
-                    b.ToTable("Orders", (string)null);
+                    b.ToTable("Orders");
                 });
 
             modelBuilder.Entity("BookTea.Models.OrderLine", b =>
@@ -202,6 +202,10 @@ namespace BookTea.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
+                    b.Property<string>("ProductName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<int>("ProductQuantityRequired")
                         .HasColumnType("int");
 
@@ -214,7 +218,7 @@ namespace BookTea.Migrations
 
                     b.HasIndex("OrderId");
 
-                    b.ToTable("OrderLines", (string)null);
+                    b.ToTable("OrderLines");
                 });
 
             modelBuilder.Entity("BookTea.Models.Payment", b =>
@@ -242,7 +246,7 @@ namespace BookTea.Migrations
                     b.HasIndex("OrderId")
                         .IsUnique();
 
-                    b.ToTable("Payments", (string)null);
+                    b.ToTable("Payments");
                 });
 
             modelBuilder.Entity("BookTea.Models.PublishingHouse", b =>
@@ -261,7 +265,7 @@ namespace BookTea.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("PublishingHouses", (string)null);
+                    b.ToTable("PublishingHouses");
                 });
 
             modelBuilder.Entity("BookTea.Models.ShippingCompany", b =>
@@ -286,7 +290,7 @@ namespace BookTea.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ShippingCompanies", (string)null);
+                    b.ToTable("ShippingCompanies");
                 });
 
             modelBuilder.Entity("BookTea.Models.Book", b =>
