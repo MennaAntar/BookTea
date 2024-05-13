@@ -11,6 +11,7 @@
         <p>Sorry! There is no cost specification yet!</p>
         <hr>
         <a asp-action="Create">Create Cost Specification</a>
+        
     </div>
 }
 else
@@ -19,12 +20,13 @@ else
 
     <p>
         <a asp-action="Create">Create New</a>
+        <form asp-action="Index" method="get">
+            <input style="width:400px" name="term" class="d-inline form-control" placeholder="Search...." type="text" />
+            <button type="submit" class="d-inline btn btn-outline-primary">Search</button>
+        </form>
     </p>
 
-    <form asp-action="Index" method="get">
-        <input style="width:400px" name="term" class="d-inline form-control" placeholder="Search...." type="text" />
-        <button type="submit" class="d-inline btn btn-outline-primary">Search</button>
-    </form>
+    
 
     <table class="table">
         <thead>

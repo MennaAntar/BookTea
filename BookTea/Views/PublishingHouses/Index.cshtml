@@ -3,11 +3,25 @@
 @{
     ViewData["Title"] = "Index";
 }
+@if (Model == null || Model.Count() == 0)
+{
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Oh no!!!</h4>
+        <p>Empty!!</p>
+        <hr>
+        <a asp-action="Create">Create Publishing Houses</a>
+    </div>
+}
+else{
 
 <h1>Index</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
+    <form asp-action="Index" method="get">
+        <input style="width:400px" name="term" class="d-inline form-control" placeholder="Search...." type="text" />
+        <button type="submit" class="d-inline btn btn-outline-primary">Search</button>
+    </form>
 </p>
 <table class="table">
     <thead>
@@ -39,3 +53,4 @@
 }
     </tbody>
 </table>
+}

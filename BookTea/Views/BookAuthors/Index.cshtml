@@ -39,15 +39,15 @@ else{
 @foreach (var item in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Book.ISBN)
+                @Html.DisplayFor(modelItem => item.Book.Title)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Author.Id)
+                @Html.DisplayFor(modelItem => item.Author.FirstName) @Html.DisplayFor(modelItem => item.Author.LastName)
             </td>
             <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        @* @Html.ActionLink("Edit", "Edit", new { BookId = item.BookId, AuthorId = item.AuthorId }) | *@
+                        @Html.ActionLink("Details", "Details", new { BookId = item.BookId, AuthorId = item.AuthorId }) |
+                        @Html.ActionLink("Delete", "Delete", new { BookId = item.BookId, AuthorId = item.AuthorId })
             </td>
         </tr>
 }

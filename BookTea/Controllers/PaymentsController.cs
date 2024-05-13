@@ -22,7 +22,7 @@ namespace BookTea.Controllers
         // GET: Payments
         public async Task<IActionResult> Index(string term)
         {
-            var payments = await _context.Payments.ToListAsync();
+            var payments = await _context.Payments.Include(c=>c.Order).ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
                 payments = payments.Where(a => a.Cost.ToString().Contains(term)

@@ -20,11 +20,16 @@ namespace BookTea.Controllers
         }
 
         // GET: PublishingHouses
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-              return _context.PublishingHouses != null ? 
-                          View(await _context.PublishingHouses.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.PublishingHouses'  is null.");
+            var author = await _context.PublishingHouses.ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                author = author.Where(a => a.Id.ToString().Contains(term) || a.Country.Contains(term) || a.Name.Contains(term)).ToList();
+
+            }
+
+            return View(author);
         }
 
         // GET: PublishingHouses/Details/5

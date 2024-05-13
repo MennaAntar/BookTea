@@ -25,11 +25,23 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Customers" asp-action="Index">Customer</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Customers
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" asp-controller="Customers" asp-action="Index">Manage</a></li>
+                                <li><a class="dropdown-item" asp-controller="Customers" asp-action="Create">Create</a></li>
+                            </ul>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ShippingCompanies" asp-action="Index">Shipping Company</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Shipping Companies
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" asp-controller="ShippingCompanies" asp-action="Index">Manage</a></li>
+                                <li><a class="dropdown-item" asp-controller="ShippingCompanies" asp-action="Create">Create</a></li>
+                            </ul>
                         </li>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -60,6 +72,42 @@
                             </ul>
                         </li>
                         <!--End my order here : Rawan-->
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Authors
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" asp-controller="Authors" asp-action="Index">Manage</a></li>
+                                <li><a class="dropdown-item" asp-controller="Authors" asp-action="Create">Create</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                BooksAuthors
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" asp-controller="BookAuthors" asp-action="Index">Manage</a></li>
+                                <li><a class="dropdown-item" asp-controller="BookAuthors" asp-action="Create">Create</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Cost Specification
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" asp-controller="CostSpecifications" asp-action="Index">Manage</a></li>
+                                <li><a class="dropdown-item" asp-controller="CostSpecifications" asp-action="Create">Create</a></li>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Payments
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li><a class="dropdown-item" asp-controller="Payments" asp-action="Index">Manage</a></li>
+                                <li><a class="dropdown-item" asp-controller="Payments" asp-action="Create">Create</a></li>
+                            </ul>
+                        </li>
                     </ul>
                 </div>
             </div>

@@ -22,10 +22,15 @@ namespace BookTea.Controllers
         }
 
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-            var applicationDbContext = _context.Books.Include(b => b.PublishingHouse);
-            return View(await applicationDbContext.ToListAsync());
+            var bookAuthors = await _context.Books.Include(c => c.PublishingHouse).ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                bookAuthors = bookAuthors.Where(a => a.Description.Contains(term) || a.Price.ToString().Contains(term)|| a.Title.Contains(term)|| a.Rating.ToString().Contains(term)|| a.Quantity.ToString().Contains(term)|| a.ISBN.ToString().Contains(term)|| a.PublishingHouseId.ToString().Contains(term)).ToList();
+
+            }
+            return View(bookAuthors);
         }
 
         // GET: Books/Details/5

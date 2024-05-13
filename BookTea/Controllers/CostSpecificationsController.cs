@@ -22,7 +22,7 @@ namespace BookTea.Controllers
         // GET: CostSpecifications
         public async Task<IActionResult> Index(string term)
         {
-            var costSpecification = await _context.CostsSpecifications.ToListAsync();
+            var costSpecification = await _context.CostsSpecifications.Include(c=>c.ShippingCompany).ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
                 costSpecification = costSpecification.Where(a => a.CityName.Contains(term) || a.DeliveryCost.ToString().Contains(term)
