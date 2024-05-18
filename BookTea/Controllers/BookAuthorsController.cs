@@ -20,16 +20,33 @@ namespace BookTea.Controllers
         }
 
         // GET: BookAuthors
-        public async Task<IActionResult> Index(string term)
+        public async Task<IActionResult> Index(string term, string orderby)
         {
-            //if (!string.IsNullOrEmpty(term))
-            //    ViewBag.term = term;
-
+            //Search
             var bookAuthors = await _context.BooksAuthors.Include(c=>c.Author).Include(c=>c.Book).ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
                 bookAuthors = bookAuthors.Where(a => a.Author.FirstName.ToString().Contains(term) || a.Book.Title.Contains(term)).ToList();
 
+            }
+
+            //Sort
+            ViewBag.OrderAuthor = orderby == "Author" ? "Author_des" : "Author";
+            ViewBag.OrderBook = orderby == "Book" ? "Book_des" : "Book";
+            switch (orderby)
+            {
+                case "Author":
+                    bookAuthors = bookAuthors.OrderBy(a => a.Author.FirstName).ToList();
+                    break;
+                case "Author_des":
+                    bookAuthors = bookAuthors.OrderByDescending(a => a.Author.FirstName).ToList();
+                    break;
+                case "Book":
+                    bookAuthors = bookAuthors.OrderBy(a => a.Book.Title).ToList();
+                    break;
+                case "Book_des":
+                    bookAuthors = bookAuthors.OrderByDescending(a => a.Book.Title).ToList();
+                    break;
             }
             return View(bookAuthors);
         }

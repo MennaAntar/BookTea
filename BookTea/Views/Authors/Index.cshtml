@@ -27,19 +27,19 @@ else{
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.FirstName)
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderFirstName">@Html.DisplayNameFor(model => model.FirstName)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LastName)
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderLastName">@Html.DisplayNameFor(model => model.LastName)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderDateOfBirth">@Html.DisplayNameFor(model => model.DateOfBirth)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateOfDeath)
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderDateOfDeath">@Html.DisplayNameFor(model => model.DateOfDeath)</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Nationality)
+                <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderNationality">@Html.DisplayNameFor(model => model.Nationality)</a>
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.PhotoUrl)

@@ -23,8 +23,9 @@ namespace BookTea.Controllers
         }
 
         // GET: Authors
-        public async Task<IActionResult> Index(string term)
+        public async Task<IActionResult> Index(string term, string orderby = "Id")
         {
+            //Search
             var author = await _context.Authors.ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
@@ -32,6 +33,46 @@ namespace BookTea.Controllers
                 || a.DateOfDeath.ToString().Contains(term) || a.Nationality.Contains(term) || a.LastName.Contains(term)
                 || a.FirstName.Contains(term)).ToList();
 
+            }
+
+            //Sort
+            ViewBag.OrderFirstName = orderby == "FirstName" ? "FirstName_des" : "FirstName";
+            ViewBag.OrderLastName = orderby == "LastName" ? "LastName_des" : "LastName";
+            switch (orderby)
+            {
+                case "FirstName":
+                    author = author.OrderBy(a => a.FirstName).ToList();
+                    break;
+                case "FirstName_des":
+                    author = author.OrderByDescending(a => a.FirstName).ToList();
+                    break;
+                case "LastName":
+                    author = author.OrderBy(a => a.LastName).ToList();
+                    break;
+                case "LastName_des":
+                    author = author.OrderByDescending(a => a.LastName).ToList();
+                    break;
+                case "DateOfBirth":
+                    author = author.OrderBy(a => a.DateOfBirth).ToList();
+                    break;
+                case "DateOfBirth_des":
+                    author = author.OrderByDescending(a => a.DateOfBirth).ToList();
+                    break;
+                case "DateOfDeath":
+                    author = author.OrderBy(a => a.DateOfDeath).ToList();
+                    break;
+                case "DateOfDeath_des":
+                    author = author.OrderByDescending(a => a.DateOfDeath).ToList();
+                    break;
+                case "Nationality":
+                    author = author.OrderBy(a => a.Nationality).ToList();
+                    break;
+                case "Nationality_des":
+                    author = author.OrderByDescending(a => a.Nationality).ToList();
+                    break;
+                default:
+                    author = author.OrderBy(a => a.Id).ToList();
+                    break;
             }
 
             return View(author);
