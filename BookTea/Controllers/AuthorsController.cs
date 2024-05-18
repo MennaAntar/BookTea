@@ -38,6 +38,9 @@ namespace BookTea.Controllers
             //Sort
             ViewBag.OrderFirstName = orderby == "FirstName" ? "FirstName_des" : "FirstName";
             ViewBag.OrderLastName = orderby == "LastName" ? "LastName_des" : "LastName";
+            ViewBag.OrderDateOfBirth = orderby == "DateOfBirth" ? "DateOfBirth_des" : "DateOfBirth";
+            ViewBag.OrderDateOfDeath = orderby == "DateOfDeath" ? "DateOfDeath_des" : "DateOfDeath";
+            ViewBag.OrderNationality = orderby == "Nationality" ? "Nationality_des" : "Nationality";
             switch (orderby)
             {
                 case "FirstName":
