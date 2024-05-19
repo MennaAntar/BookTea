@@ -33,19 +33,19 @@ else
                     @Html.DisplayNameFor(model => model.Password)
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Name)
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderName">@Html.DisplayNameFor(model => model.Name)</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Email)
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderEmail">@Html.DisplayNameFor(model => model.Email)</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.DateOfBirth)
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderDateOfBirth">@Html.DisplayNameFor(model => model.DateOfBirth)</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Address)
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderAddress">@Html.DisplayNameFor(model => model.Address)</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Country)
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderCountry">@Html.DisplayNameFor(model => model.Country)</a>
                 </th>
                 <th></th>
             </tr>

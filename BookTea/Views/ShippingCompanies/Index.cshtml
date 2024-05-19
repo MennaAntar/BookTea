@@ -30,16 +30,16 @@ else
         <thead>
             <tr>
                 <th>
-                    @Html.DisplayNameFor(model => model.Cost)
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderCost">@Html.DisplayNameFor(model => model.Cost)</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Date)
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderDate">@Html.DisplayNameFor(model => model.Date)</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Weight)
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderWeight">@Html.DisplayNameFor(model => model.Weight)</a>
                 </th>
                 <th>
-                    @Html.DisplayNameFor(model => model.Destination)
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderDestination">@Html.DisplayNameFor(model => model.Destination)</a>
                 </th>
                 <th></th>
             </tr>

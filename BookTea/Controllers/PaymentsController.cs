@@ -20,14 +20,51 @@ namespace BookTea.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index(string term)
+        public async Task<IActionResult> Index(string term, string orderby = "Id")
         {
-            var payments = await _context.Payments.Include(c=>c.Order).ToListAsync();
+            var payments = await _context.Payments.Include(c => c.Order).ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
                 payments = payments.Where(a => a.Cost.ToString().Contains(term)
-                || a.PendingDate.ToString().Contains(term) || a.Date.ToString().Contains(term) || a.OrderId.ToString().Contains(term)).ToList();
+                || a.PendingDate.ToString().Contains(term) || a.Date.ToString().Contains(term) ||
+                a.OrderId.ToString().Contains(term)).ToList();
 
+            }
+
+            //Sort
+            ViewBag.OrderCost = orderby == "Cost" ? "Cost_des" : "Cost";
+            ViewBag.OrderPendingDate = orderby == "PendingDate" ? "PendingDate_des" : "PendingDate";
+            ViewBag.OrderDate = orderby == "Date" ? "Date_des" : "Date";
+            ViewBag.OrderOrderId = orderby == "OrderId" ? "OrderId_des" : "OrderId";
+            switch (orderby)
+            {
+                case "Cost":
+                    payments = payments.OrderBy(a => a.Cost).ToList();
+                    break;
+                case "Cost_des":
+                    payments = payments.OrderByDescending(a => a.Cost).ToList();
+                    break;
+                case "PendingDate":
+                    payments = payments.OrderBy(a => a.PendingDate).ToList();
+                    break;
+                case "PendingDate_des":
+                    payments = payments.OrderByDescending(a => a.PendingDate).ToList();
+                    break;
+                case "Date":
+                    payments = payments.OrderBy(a => a.Date).ToList();
+                    break;
+                case "Date_des":
+                    payments = payments.OrderByDescending(a => a.Date).ToList();
+                    break;
+                case "OrderId":
+                    payments = payments.OrderBy(a => a.OrderId).ToList();
+                    break;
+                case "OrderId_des":
+                    payments = payments.OrderByDescending(a => a.OrderId).ToList();
+                    break;
+                default:
+                    payments = payments.OrderBy(a => a.Id).ToList();
+                    break;
             }
             return View(payments);
         }

@@ -20,16 +20,45 @@ namespace BookTea.Controllers
         }
 
         // GET: CostSpecifications
-        public async Task<IActionResult> Index(string term)
+        public async Task<IActionResult> Index(string term, string orderby = "Id")
         {
-            var costSpecification = await _context.CostsSpecifications.Include(c=>c.ShippingCompany).ToListAsync();
+            var costSpecification = await _context.CostsSpecifications.Include(c => c.ShippingCompany).ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
-                costSpecification = costSpecification.Where(a => a.CityName.Contains(term) || a.DeliveryCost.ToString().Contains(term)
+                costSpecification = costSpecification.Where(a => a.CityName.Contains(term)
+                || a.DeliveryCost.ToString().Contains(term)
                 || a.ShippingCompanyId.ToString().Contains(term)).ToList();
 
             }
 
+            //Sort
+            ViewBag.OrderCityName = orderby == "CityName" ? "CityName_des" : "CityName";
+            ViewBag.OrderDeliveryCost = orderby == "DeliveryCost" ? "DeliveryCost_des" : "DeliveryCost";
+            ViewBag.OrderShippingCompanyId = orderby == "ShippingCompanyId" ? "ShippingCompanyId_des" : "ShippingCompanyId";
+            switch (orderby)
+            {
+                case "CityName":
+                    costSpecification = costSpecification.OrderBy(a => a.CityName).ToList();
+                    break;
+                case "CityName_des":
+                    costSpecification = costSpecification.OrderByDescending(a => a.CityName).ToList();
+                    break;
+                case "DeliveryCost":
+                    costSpecification = costSpecification.OrderBy(a => a.DeliveryCost).ToList();
+                    break;
+                case "DeliveryCost_des":
+                    costSpecification = costSpecification.OrderByDescending(a => a.DeliveryCost).ToList();
+                    break;
+                case "ShippingCompanyId":
+                    costSpecification = costSpecification.OrderBy(a => a.ShippingCompanyId).ToList();
+                    break;
+                case "ShippingCompanyId_des":
+                    costSpecification = costSpecification.OrderByDescending(a => a.ShippingCompanyId).ToList();
+                    break;
+                default:
+                    costSpecification = costSpecification.OrderBy(a => a.Id).ToList();
+                    break;
+            }
             return View(costSpecification);
         }
 

@@ -20,14 +20,51 @@ namespace BookTea.Controllers
         }
 
         // GET: ShippingCompanies
-        public async Task<IActionResult> Index(string term)
+        public async Task<IActionResult> Index(string term, string orderby = "Id")
         {
             var shipingCompany = await _context.ShippingCompanies.ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
                 shipingCompany = shipingCompany.Where(a => a.Cost.ToString().Contains(term)
-                || a.Date.ToString().Contains(term) || a.Weight.ToString().Contains(term) || a.Destination.Contains(term)).ToList();
+                || a.Date.ToString().Contains(term) || a.Weight.ToString().Contains(term)
+                || a.Destination.Contains(term)).ToList();
 
+            }
+
+            //Sort
+            ViewBag.OrderCost = orderby == "Cost" ? "Cost_des" : "Cost";
+            ViewBag.OrderDate = orderby == "Date" ? "Date_des" : "Date";
+            ViewBag.OrderWeight = orderby == "Weight" ? "Weight_des" : "Weight";
+            ViewBag.OrderDestination = orderby == "Destination" ? "Destination_des" : "Destination";
+            switch (orderby)
+            {
+                case "Cost":
+                    shipingCompany = shipingCompany.OrderBy(a => a.Cost).ToList();
+                    break;
+                case "Cost_des":
+                    shipingCompany = shipingCompany.OrderByDescending(a => a.Cost).ToList();
+                    break;
+                case "Date":
+                    shipingCompany = shipingCompany.OrderBy(a => a.Date).ToList();
+                    break;
+                case "Date_des":
+                    shipingCompany = shipingCompany.OrderByDescending(a => a.Date).ToList();
+                    break;
+                case "Weight":
+                    shipingCompany = shipingCompany.OrderBy(a => a.Weight).ToList();
+                    break;
+                case "Weight_des":
+                    shipingCompany = shipingCompany.OrderByDescending(a => a.Weight).ToList();
+                    break;
+                case "Destination":
+                    shipingCompany = shipingCompany.OrderBy(a => a.Destination).ToList();
+                    break;
+                case "Destination_des":
+                    shipingCompany = shipingCompany.OrderByDescending(a => a.Destination).ToList();
+                    break;
+                default:
+                    shipingCompany = shipingCompany.OrderBy(a => a.Id).ToList();
+                    break;
             }
 
             return View(shipingCompany);
