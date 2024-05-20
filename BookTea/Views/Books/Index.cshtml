@@ -14,6 +14,77 @@
 }
 else{
 
+<<<<<<< HEAD
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Oh no!!!</h4>
+        <p>There are no books yet!</p>
+        <hr>
+        <a asp-action="Create">Create Books</a>
+    </div>
+}
+else
+{
+    <h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+        <form asp-action="Index" method="get" class="form-inline">
+            <input style="width:400px" name="term" class="form-control mr-sm-2" placeholder="Search...." type="text" />
+            <button type="submit" class="btn btn-outline-primary my-2 my-sm-0">Search</button>
+        </form>
+    </p>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderTitle">@Html.DisplayNameFor(model => model.First().Title)</a>
+                </th>
+                <th>
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderPrice">@Html.DisplayNameFor(model => model.First().Price)</a>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().PhotoUrl)
+                </th>
+                <th>
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderRating">@Html.DisplayNameFor(model => model.First().Rating)</a>
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.First().Description)
+                </th>
+                <th>
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderQuantity">@Html.DisplayNameFor(model => model.First().Quantity)</a>
+                </th>
+                <th>
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderPublishingHouse">@Html.DisplayNameFor(model => model.First().PublishingHouse.Name)</a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>@Html.DisplayFor(modelItem => item.Title)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Price)</td>
+                    <td><img src="~/Images/@item.PhotoUrl" width="60px" height="60px" /></td>
+                    <td>@Html.DisplayFor(modelItem => item.Rating)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                    <td>@Html.DisplayFor(modelItem => item.Quantity)</td>
+                    <td>@Html.DisplayFor(modelItem => item.PublishingHouse.Name)</td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.ISBN">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.ISBN">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.ISBN">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+=======
 <h1>Index</h1>
 
 <p>
@@ -84,3 +155,4 @@ else{
     </tbody>
 </table>
 }
+>>>>>>> a3e681b4628bb495d16b8772369654bf5fca1f79

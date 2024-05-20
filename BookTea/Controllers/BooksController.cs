@@ -20,7 +20,7 @@ namespace BookTea.Controllers
             _context = context;
             _webHost = webHost;
         }
-
+        /*
         // GET: Books
         public async Task<IActionResult> Index(string term)
         {
@@ -32,6 +32,68 @@ namespace BookTea.Controllers
             }
             return View(bookAuthors);
         }
+        */
+        //__________
+        // GET: Books
+        public async Task<IActionResult> Index(string term, string orderby)
+        {
+            var books = await _context.Books.Include(c => c.PublishingHouse).ToListAsync();
+            //Search
+            if (!String.IsNullOrEmpty(term))
+            {
+                books = books.Where(a => a.Description.Contains(term) || a.Price.ToString().Contains(term) ||
+                                          a.Title.Contains(term) || a.Rating.ToString().Contains(term) ||
+                                          a.Quantity.ToString().Contains(term) || a.ISBN.ToString().Contains(term) ||
+                                          a.PublishingHouseId.ToString().Contains(term)).ToList();
+            }
+
+            // Sort
+            ViewBag.OrderTitle = orderby == "Title" ? "Title_des" : "Title";
+            ViewBag.OrderPrice = orderby == "Price" ? "Price_des" : "Price";
+            ViewBag.OrderRating = orderby == "Rating" ? "Rating_des" : "Rating";
+            ViewBag.OrderQuantity = orderby == "Quantity" ? "Quantity_des" : "Quantity";
+            ViewBag.OrderPublishingHouse = orderby == "PublishingHouse" ? "PublishingHouse_des" : "PublishingHouse";
+
+            switch (orderby)
+            {
+                case "Title":
+                    books = books.OrderBy(b => b.Title).ToList();
+                    break;
+                case "Title_des":
+                    books = books.OrderByDescending(b => b.Title).ToList();
+                    break;
+                case "Price":
+                    books = books.OrderBy(b => b.Price).ToList();
+                    break;
+                case "Price_des":
+                    books = books.OrderByDescending(b => b.Price).ToList();
+                    break;
+                case "Rating":
+                    books = books.OrderBy(b => b.Rating).ToList();
+                    break;
+                case "Rating_des":
+                    books = books.OrderByDescending(b => b.Rating).ToList();
+                    break;
+                case "Quantity":
+                    books = books.OrderBy(b => b.Quantity).ToList();
+                    break;
+                case "Quantity_des":
+                    books = books.OrderByDescending(b => b.Quantity).ToList();
+                    break;
+                case "PublishingHouse":
+                    books = books.OrderBy(b => b.PublishingHouse.Name).ToList(); // Assuming PublishingHouse has a Name property
+                    break;
+                case "PublishingHouse_des":
+                    books = books.OrderByDescending(b => b.PublishingHouse.Name).ToList();
+                    break;
+                default:
+                    books = books.OrderBy(b => b.ISBN).ToList();
+                    break;
+            }
+
+            return View(books);
+        }
+        //__________
 
         // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)
