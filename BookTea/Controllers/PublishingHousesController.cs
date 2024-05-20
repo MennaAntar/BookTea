@@ -27,6 +27,14 @@ namespace BookTea.Controllers
             if (!String.IsNullOrEmpty(term))
             {
                 author = author.Where(a => a.Id.ToString().Contains(term) || a.Country.Contains(term) || a.Name.Contains(term)).ToList();
+<<<<<<< HEAD
+=======
+
+            }
+
+            return View(author);
+        }
+>>>>>>> a3e681b4628bb495d16b8772369654bf5fca1f79
 
             }
 

@@ -3,7 +3,18 @@
 @{
     ViewData["Title"] = "Index";
 }
+@if (Model == null || Model.Count() == 0)
+{
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Oh no!!!</h4>
+        <p>There is no books yet!</p>
+        <hr>
+        <a asp-action="Create">Create Books</a>
+    </div>
+}
+else{
 
+<<<<<<< HEAD
 @if (Model == null || !Model.Any())
 {
     <div class="alert alert-warning" role="alert">
@@ -73,3 +84,75 @@ else
         </tbody>
     </table>
 }
+=======
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+    <form asp-action="Index" method="get">
+        <input style="width:400px" name="term" class="d-inline form-control" placeholder="Search...." type="text" />
+        <button type="submit" class="d-inline btn btn-outline-primary">Search</button>
+    </form>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Title)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PhotoUrl)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Rating)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PublishingHouse)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                    <img src="~/Images/@item.PhotoUrl" width="60px" height="60px" />
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Rating)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Description)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Quantity)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PublishingHouse.Id)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.ISBN">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.ISBN">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.ISBN">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+}
+>>>>>>> a3e681b4628bb495d16b8772369654bf5fca1f79
