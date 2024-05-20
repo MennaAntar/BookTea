@@ -4,50 +4,71 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Cost)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Date)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Weight)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Destination)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Cost)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Date)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Weight)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Destination)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
+@if (Model == null || Model.Count() == 0)
+{
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Oh no!</h4>
+        <p>Sorry! There is no shipping company yet!</p>
+        <hr>
+        <a asp-action="Create">Create Shipping Company</a>
+    </div>
 }
-    </tbody>
-</table>
+else
+{
+    <h1>Index</h1>
+
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+
+    <form asp-action="Index" method="get">
+        <input style="width:400px" name="term" class="d-inline form-control" placeholder="Search...." type="text" />
+        <button type="submit" class="d-inline btn btn-outline-primary">Search</button>
+    </form>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderCost">@Html.DisplayNameFor(model => model.Cost)</a>
+                </th>
+                <th>
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderDate">@Html.DisplayNameFor(model => model.Date)</a>
+                </th>
+                <th>
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderWeight">@Html.DisplayNameFor(model => model.Weight)</a>
+                </th>
+                <th>
+                    <a class="text-reset text-decoration-none" asp-action="Index" asp-route-orderby="@ViewBag.OrderDestination">@Html.DisplayNameFor(model => model.Destination)</a>
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Cost)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Date)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Weight)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Destination)
+                    </td>
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                        <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+}
+

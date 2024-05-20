@@ -20,16 +20,41 @@ namespace BookTea.Controllers
         }
 
         // GET: BookAuthors
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term, string orderby)
         {
-            var applicationDbContext = _context.BooksAuthors.Include(b => b.Author).Include(b => b.Book);
-            return View(await applicationDbContext.ToListAsync());
+            //Search
+            var bookAuthors = await _context.BooksAuthors.Include(c=>c.Author).Include(c=>c.Book).ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                bookAuthors = bookAuthors.Where(a => a.Author.FirstName.ToString().Contains(term) || a.Book.Title.Contains(term)).ToList();
+
+            }
+
+            //Sort
+            ViewBag.OrderAuthor = orderby == "Author" ? "Author_des" : "Author";
+            ViewBag.OrderBook = orderby == "Book" ? "Book_des" : "Book";
+            switch (orderby)
+            {
+                case "Author":
+                    bookAuthors = bookAuthors.OrderBy(a => a.Author.FirstName).ToList();
+                    break;
+                case "Author_des":
+                    bookAuthors = bookAuthors.OrderByDescending(a => a.Author.FirstName).ToList();
+                    break;
+                case "Book":
+                    bookAuthors = bookAuthors.OrderBy(a => a.Book.Title).ToList();
+                    break;
+                case "Book_des":
+                    bookAuthors = bookAuthors.OrderByDescending(a => a.Book.Title).ToList();
+                    break;
+            }
+            return View(bookAuthors);
         }
 
         // GET: BookAuthors/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? BookId, int? AuthorId)
         {
-            if (id == null || _context.BooksAuthors == null)
+            if (BookId == null|| AuthorId==null || _context.BooksAuthors == null)
             {
                 return NotFound();
             }
@@ -37,7 +62,7 @@ namespace BookTea.Controllers
             var bookAuthor = await _context.BooksAuthors
                 .Include(b => b.Author)
                 .Include(b => b.Book)
-                .FirstOrDefaultAsync(m => m.BookId == id);
+                .FirstOrDefaultAsync(m => m.BookId == BookId&&m.AuthorId==AuthorId);
             if (bookAuthor == null)
             {
                 return NotFound();
@@ -72,65 +97,69 @@ namespace BookTea.Controllers
             return View(bookAuthor);
         }
 
-        // GET: BookAuthors/Edit/5
-        public async Task<IActionResult> Edit(int? id)
-        {
-            if (id == null || _context.BooksAuthors == null)
-            {
-                return NotFound();
-            }
+        //// GET: BookAuthors/Edit/5
+        //public async Task<IActionResult> Edit(int? BookId, int? AuthorId)
+        //{
+        //    if (BookId==null|| AuthorId==null || _context.BooksAuthors == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            var bookAuthor = await _context.BooksAuthors.FindAsync(id);
-            if (bookAuthor == null)
-            {
-                return NotFound();
-            }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", bookAuthor.AuthorId);
-            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", bookAuthor.BookId);
-            return View(bookAuthor);
-        }
+        //    var bookAuthor = await _context.BooksAuthors
+        //        .Include(b => b.Author)
+        //        .Include(b => b.Book)
+        //        .FirstOrDefaultAsync(m => m.BookId == BookId && m.AuthorId == AuthorId);
 
-        // POST: BookAuthors/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("BookId,AuthorId")] BookAuthor bookAuthor)
-        {
-            if (id != bookAuthor.BookId)
-            {
-                return NotFound();
-            }
+        //    if (bookAuthor == null)
+        //    {
+        //        return NotFound();
+        //    }
+        //    ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", bookAuthor.AuthorId);
+        //    ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", bookAuthor.BookId);
+        //    return View(bookAuthor);
+        //}
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(bookAuthor);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!BookAuthorExists(bookAuthor.BookId))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
-            }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", bookAuthor.AuthorId);
-            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", bookAuthor.BookId);
-            return View(bookAuthor);
-        }
+        //// POST: BookAuthors/Edit/5
+        //// To protect from overposting attacks, enable the specific properties you want to bind to.
+        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> Edit(int? BookId, int? AuthorId, [Bind("BookId,AuthorId")] BookAuthor bookAuthor)
+        //{
+        //    if (BookId != bookAuthor.BookId||AuthorId!=bookAuthor.AuthorId)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _context.Update(bookAuthor);
+        //            await _context.SaveChangesAsync();
+        //        }
+        //        catch (DbUpdateConcurrencyException)
+        //        {
+        //            if (!BookAuthorExists(bookAuthor.BookId))
+        //            {
+        //                return NotFound();
+        //            }
+        //            else
+        //            {
+        //                throw;
+        //            }
+        //        }
+        //        return RedirectToAction(nameof(Index));
+        //    }
+        //    ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", bookAuthor.AuthorId);
+        //    ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", bookAuthor.BookId);
+        //    return View(bookAuthor);
+        //}
 
         // GET: BookAuthors/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? BookId, int? AuthorId)
         {
-            if (id == null || _context.BooksAuthors == null)
+            if (BookId==null||AuthorId==null || _context.BooksAuthors == null)
             {
                 return NotFound();
             }
@@ -138,7 +167,7 @@ namespace BookTea.Controllers
             var bookAuthor = await _context.BooksAuthors
                 .Include(b => b.Author)
                 .Include(b => b.Book)
-                .FirstOrDefaultAsync(m => m.BookId == id);
+                .FirstOrDefaultAsync(m => m.BookId == BookId && m.AuthorId == AuthorId);
             if (bookAuthor == null)
             {
                 return NotFound();
@@ -150,13 +179,13 @@ namespace BookTea.Controllers
         // POST: BookAuthors/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed(int? BookId, int? AuthorId)
         {
             if (_context.BooksAuthors == null)
             {
                 return Problem("Entity set 'ApplicationDbContext.BooksAuthors'  is null.");
             }
-            var bookAuthor = await _context.BooksAuthors.FindAsync(id);
+            var bookAuthor = await _context.BooksAuthors.FirstOrDefaultAsync(m => m.AuthorId == AuthorId && m.BookId == BookId);
             if (bookAuthor != null)
             {
                 _context.BooksAuthors.Remove(bookAuthor);

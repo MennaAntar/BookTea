@@ -20,11 +20,61 @@ namespace BookTea.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term, string orderby = "Id")
         {
-              return _context.Customers != null ? 
-                          View(await _context.Customers.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.Customers'  is null.");
+            var customer = await _context.Customers.ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                customer = customer.Where(a => a.Name.Contains(term) ||
+                a.Email.Contains(term) || a.DateOfBirth.ToString().Contains(term) || a.Address.Contains(term) ||
+                a.Country.Contains(term)).ToList();
+
+            }
+
+            //Sort
+            ViewBag.OrderName = orderby == "Name" ? "Name_des" : "Name";
+            ViewBag.OrderEmail = orderby == "Email" ? "Email_des" : "Email";
+            ViewBag.OrderDateOfBirth = orderby == "DateOfBirth" ? "DateOfBirth_des" : "DateOfBirth";
+            ViewBag.OrderAddress = orderby == "Address" ? "Address_des" : "Address";
+            ViewBag.OrderCountry = orderby == "Country" ? "Country_des" : "Country";
+            switch (orderby)
+            {
+                case "Name":
+                    customer = customer.OrderBy(a => a.Name).ToList();
+                    break;
+                case "Name_des":
+                    customer = customer.OrderByDescending(a => a.Name).ToList();
+                    break;
+                case "Email":
+                    customer = customer.OrderBy(a => a.Email).ToList();
+                    break;
+                case "Email_des":
+                    customer = customer.OrderByDescending(a => a.Email).ToList();
+                    break;
+                case "DateOfBirth":
+                    customer = customer.OrderBy(a => a.DateOfBirth).ToList();
+                    break;
+                case "DateOfBirth_des":
+                    customer = customer.OrderByDescending(a => a.DateOfBirth).ToList();
+                    break;
+                case "Address":
+                    customer = customer.OrderBy(a => a.Address).ToList();
+                    break;
+                case "Address_des":
+                    customer = customer.OrderByDescending(a => a.Address).ToList();
+                    break;
+                case "Country":
+                    customer = customer.OrderBy(a => a.Country).ToList();
+                    break;
+                case "Country_des":
+                    customer = customer.OrderByDescending(a => a.Country).ToList();
+                    break;
+                default:
+                    customer = customer.OrderBy(a => a.Id).ToList();
+                    break;
+            }
+
+            return View(customer);
         }
 
         // GET: Customers/Details/5

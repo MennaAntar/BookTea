@@ -19,14 +19,65 @@ namespace BookTea.Controllers
             _context = context;
         }
 
+        /*
         // GET: PublishingHouses
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-              return _context.PublishingHouses != null ? 
-                          View(await _context.PublishingHouses.ToListAsync()) :
-                          Problem("Entity set 'ApplicationDbContext.PublishingHouses'  is null.");
-        }
+            var author = await _context.PublishingHouses.ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                author = author.Where(a => a.Id.ToString().Contains(term) || a.Country.Contains(term) || a.Name.Contains(term)).ToList();
 
+            }
+
+            return View(author);
+        }
+        */
+        // GET: PublishingHouses
+        public async Task<IActionResult> Index(string term, string orderby)
+        {
+            var publishingHouses = await _context.PublishingHouses.ToListAsync();
+            //Search
+            if (!String.IsNullOrEmpty(term))
+            {
+                publishingHouses = publishingHouses.Where(p =>
+                    p.Id.ToString().Contains(term) ||
+                    p.Country.Contains(term) ||
+                    p.Name.Contains(term)).ToList();
+            }
+
+            // Sort
+            ViewBag.OrderName = orderby == "Name" ? "Name_des" : "Name";
+            ViewBag.OrderCountry = orderby == "Country" ? "Country_des" : "Country";
+            ViewBag.OrderId = orderby == "Id" ? "Id_des" : "Id";
+
+            switch (orderby)
+            {
+                case "Name":
+                    publishingHouses = publishingHouses.OrderBy(p => p.Name).ToList();
+                    break;
+                case "Name_des":
+                    publishingHouses = publishingHouses.OrderByDescending(p => p.Name).ToList();
+                    break;
+                case "Country":
+                    publishingHouses = publishingHouses.OrderBy(p => p.Country).ToList();
+                    break;
+                case "Country_des":
+                    publishingHouses = publishingHouses.OrderByDescending(p => p.Country).ToList();
+                    break;
+                case "Id":
+                    publishingHouses = publishingHouses.OrderBy(p => p.Id).ToList();
+                    break;
+                case "Id_des":
+                    publishingHouses = publishingHouses.OrderByDescending(p => p.Id).ToList();
+                    break;
+                default:
+                    publishingHouses = publishingHouses.OrderBy(p => p.Id).ToList();
+                    break;
+            }
+
+            return View(publishingHouses);
+        }
         // GET: PublishingHouses/Details/5
         public async Task<IActionResult> Details(int? id)
         {

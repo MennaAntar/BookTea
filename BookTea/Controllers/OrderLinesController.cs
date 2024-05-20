@@ -20,10 +20,18 @@ namespace BookTea.Controllers
         }
 
         // GET: OrderLines
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string searchWord)
         {
             var applicationDbContext = _context.OrderLines.Include(o => o.Book).Include(o => o.Order);
-            return View(await applicationDbContext.ToListAsync());
+            var OrderLines = await applicationDbContext.ToListAsync();
+
+            //item != ""
+            if (!string.IsNullOrEmpty(searchWord))
+            {
+                OrderLines = OrderLines.Where(orl => orl.TotalProductPrice.ToString().Contains(searchWord)
+                                                  || orl.ProductName.Contains(searchWord)).ToList();
+            }
+            return View(OrderLines);
         }
 
         // GET: OrderLines/Details/5
@@ -59,7 +67,7 @@ namespace BookTea.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("OL_Id,TotalProductPrice,ProductQuantityRequired,BookId,OrderId")] OrderLine orderLine)
+        public async Task<IActionResult> Create([Bind("OL_Id,ProductName,TotalProductPrice,ProductQuantityRequired,BookId,OrderId")] OrderLine orderLine)
         {
             if (ModelState.IsValid)
             {
@@ -95,7 +103,7 @@ namespace BookTea.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("OL_Id,TotalProductPrice,ProductQuantityRequired,BookId,OrderId")] OrderLine orderLine)
+        public async Task<IActionResult> Edit(int id, [Bind("OL_Id,ProductName,TotalProductPrice,ProductQuantityRequired,BookId,OrderId")] OrderLine orderLine)
         {
             if (id != orderLine.OL_Id)
             {

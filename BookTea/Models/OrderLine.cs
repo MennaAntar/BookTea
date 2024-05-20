@@ -6,6 +6,8 @@ namespace BookTea.Models
     {
         [Key]
         public int OL_Id { get; set; }
+
+        public string ProductName { get; set; }
         public int TotalProductPrice { get; set; }
         public int ProductQuantityRequired { get; set; }
 

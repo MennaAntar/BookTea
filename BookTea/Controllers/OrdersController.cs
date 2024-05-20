@@ -20,10 +20,16 @@ namespace BookTea.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-            var applicationDbContext = _context.Orders.Include(o => o.Customer).Include(o => o.ShippingCompany);
-            return View(await applicationDbContext.ToListAsync());
+            var author = await _context.Orders.Include(c=>c.Customer).Include(c => c.ShippingCompany).ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                author = author.Where(a => a.Id.ToString().Contains(term) || a.TotalCost.ToString().Contains(term) || a.ShippingCompanyId.ToString().Contains(term) || a.RequestDate.ToString().Contains(term)).ToList();
+
+            }
+
+            return View(author);
         }
 
         // GET: Orders/Details/5

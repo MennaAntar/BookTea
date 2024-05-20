@@ -13,18 +13,87 @@ namespace BookTea.Controllers
     public class BooksController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IWebHostEnvironment _webHost;
 
-        public BooksController(ApplicationDbContext context)
+        public BooksController(ApplicationDbContext context, IWebHostEnvironment webHost)
         {
             _context = context;
+            _webHost = webHost;
         }
-
+        /*
         // GET: Books
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string term)
         {
-            var applicationDbContext = _context.Books.Include(b => b.PublishingHouse);
-            return View(await applicationDbContext.ToListAsync());
+            var bookAuthors = await _context.Books.Include(c => c.PublishingHouse).ToListAsync();
+            if (!String.IsNullOrEmpty(term))
+            {
+                bookAuthors = bookAuthors.Where(a => a.Description.Contains(term) || a.Price.ToString().Contains(term)|| a.Title.Contains(term)|| a.Rating.ToString().Contains(term)|| a.Quantity.ToString().Contains(term)|| a.ISBN.ToString().Contains(term)|| a.PublishingHouseId.ToString().Contains(term)).ToList();
+
+            }
+            return View(bookAuthors);
         }
+        */
+        //__________
+        // GET: Books
+        public async Task<IActionResult> Index(string term, string orderby)
+        {
+            var books = await _context.Books.Include(c => c.PublishingHouse).ToListAsync();
+            //Search
+            if (!String.IsNullOrEmpty(term))
+            {
+                books = books.Where(a => a.Description.Contains(term) || a.Price.ToString().Contains(term) ||
+                                          a.Title.Contains(term) || a.Rating.ToString().Contains(term) ||
+                                          a.Quantity.ToString().Contains(term) || a.ISBN.ToString().Contains(term) ||
+                                          a.PublishingHouseId.ToString().Contains(term)).ToList();
+            }
+
+            // Sort
+            ViewBag.OrderTitle = orderby == "Title" ? "Title_des" : "Title";
+            ViewBag.OrderPrice = orderby == "Price" ? "Price_des" : "Price";
+            ViewBag.OrderRating = orderby == "Rating" ? "Rating_des" : "Rating";
+            ViewBag.OrderQuantity = orderby == "Quantity" ? "Quantity_des" : "Quantity";
+            ViewBag.OrderPublishingHouse = orderby == "PublishingHouse" ? "PublishingHouse_des" : "PublishingHouse";
+
+            switch (orderby)
+            {
+                case "Title":
+                    books = books.OrderBy(b => b.Title).ToList();
+                    break;
+                case "Title_des":
+                    books = books.OrderByDescending(b => b.Title).ToList();
+                    break;
+                case "Price":
+                    books = books.OrderBy(b => b.Price).ToList();
+                    break;
+                case "Price_des":
+                    books = books.OrderByDescending(b => b.Price).ToList();
+                    break;
+                case "Rating":
+                    books = books.OrderBy(b => b.Rating).ToList();
+                    break;
+                case "Rating_des":
+                    books = books.OrderByDescending(b => b.Rating).ToList();
+                    break;
+                case "Quantity":
+                    books = books.OrderBy(b => b.Quantity).ToList();
+                    break;
+                case "Quantity_des":
+                    books = books.OrderByDescending(b => b.Quantity).ToList();
+                    break;
+                case "PublishingHouse":
+                    books = books.OrderBy(b => b.PublishingHouse.Name).ToList(); // Assuming PublishingHouse has a Name property
+                    break;
+                case "PublishingHouse_des":
+                    books = books.OrderByDescending(b => b.PublishingHouse.Name).ToList();
+                    break;
+                default:
+                    books = books.OrderBy(b => b.ISBN).ToList();
+                    break;
+            }
+
+            return View(books);
+        }
+        //__________
 
         // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)
@@ -57,10 +126,11 @@ namespace BookTea.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ISBN,Title,Price,PhotoUrl,Rating,Description,Quantity,PublishingHouseId")] Book book)
+        public async Task<IActionResult> Create([Bind("ISBN,Title,Price,ImageFile,Rating,Description,Quantity,PublishingHouseId")] Book book)
         {
             if (ModelState.IsValid)
             {
+                book.PhotoUrl = UploadImage(book);
                 _context.Add(book);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -91,7 +161,7 @@ namespace BookTea.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("ISBN,Title,Price,PhotoUrl,Rating,Description,Quantity,PublishingHouseId")] Book book)
+        public async Task<IActionResult> Edit(int id, [Bind("ISBN,Title,Price,ImageFile,Rating,Description,Quantity,PublishingHouseId")] Book book)
         {
             if (id != book.ISBN)
             {
@@ -102,6 +172,11 @@ namespace BookTea.Controllers
             {
                 try
                 {
+                    if (book.ImageFile != null)
+                    {
+                        string uniqueFileName = UploadImage(book);
+                        book.PhotoUrl = uniqueFileName;
+                    }
                     _context.Update(book);
                     await _context.SaveChangesAsync();
                 }
@@ -163,6 +238,22 @@ namespace BookTea.Controllers
         private bool BookExists(int id)
         {
           return (_context.Books?.Any(e => e.ISBN == id)).GetValueOrDefault();
+        }
+
+        private string UploadImage(Book book)
+        {
+            string uniqueFileName = null;
+            if (book.ImageFile != null)
+            {
+                string uploadsFolder = Path.Combine(_webHost.WebRootPath, "images"); //بيجيب فولدر الصور اللي هتنزل عليه
+                uniqueFileName = Guid.NewGuid().ToString() + "_" + book.ImageFile.FileName; //اسم الملف الاصلي
+                string filePath = Path.Combine(uploadsFolder, uniqueFileName); //لما بيدمج الاتنين بيكون دا مكان الصورة الجديد
+                using (var fileStream = new FileStream(filePath, FileMode.Create)) //بينقل الصورة للمكان الجديد
+                {
+                    book.ImageFile.CopyTo(fileStream);
+                }
+            }
+            return uniqueFileName;
         }
     }
 }

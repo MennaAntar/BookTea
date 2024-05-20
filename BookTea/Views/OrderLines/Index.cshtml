@@ -6,12 +6,21 @@
 
 <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+<div>
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+    <form method="get">
+        <input name="searchWord" style="width:400px" class="d-inline form-control" placeholder="search..." type="text" />
+        <button class="d-inline btn btn-outline-primary">Search</button>
+    </form>
+</div>
 <table class="table">
     <thead>
         <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.ProductName)
+            </th>
             <th>
                 @Html.DisplayNameFor(model => model.TotalProductPrice)
             </th>
@@ -30,6 +39,9 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductName)
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TotalProductPrice)
             </td>

@@ -14,6 +14,7 @@ namespace BookTea.Models
         [NotMapped]
         public IFormFile? ImageFile { get; set; }
 
+        [Column(TypeName = "float")]
         public float Rating { get; set; }
         public string? Description { get; set; }
         public int Quantity { get; set; }
