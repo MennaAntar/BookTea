@@ -20,17 +20,21 @@ namespace BookTea.Controllers
         }
 
         // GET: OrderLines
-        public async Task<IActionResult> Index(string searchWord)
+        public async Task<IActionResult> Index(string searchWord , string orderby= "TotalProductPrice")
         {
+            
+
             var applicationDbContext = _context.OrderLines.Include(o => o.Book).Include(o => o.Order);
             var OrderLines = await applicationDbContext.ToListAsync();
 
-            //item != ""
-            if (!string.IsNullOrEmpty(searchWord))
+            
+            /*if (!string.IsNullOrEmpty(searchWord))
             {
                 OrderLines = OrderLines.Where(orl => orl.TotalProductPrice.ToString().Contains(searchWord)
                                                   || orl.ProductName.Contains(searchWord)).ToList();
-            }
+            }*/
+            
+
             return View(OrderLines);
         }
 

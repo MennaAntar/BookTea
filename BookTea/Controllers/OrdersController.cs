@@ -20,13 +20,24 @@ namespace BookTea.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index(string term)
+        public async Task<IActionResult> Index(string term , string orderby= "TotalCost")
         {
+            // @Html.DisplayNameFor(model => model.TotalCost)
+            ViewBag.orderCost = orderby == "TotalCost" ? "TotalCost_des" : "TotalCost";
             var author = await _context.Orders.Include(c=>c.Customer).Include(c => c.ShippingCompany).ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
                 author = author.Where(a => a.Id.ToString().Contains(term) || a.TotalCost.ToString().Contains(term) || a.ShippingCompanyId.ToString().Contains(term) || a.RequestDate.ToString().Contains(term)).ToList();
 
+            }
+            switch (orderby)
+            {
+                case "TotalCost":
+                    author = author.OrderBy(orl => orl.TotalCost).ToList();
+                    break;
+                case "TotalCost_des":
+                    author = author.OrderByDescending(orl => orl.TotalCost).ToList();
+                    break;
             }
 
             return View(author);
