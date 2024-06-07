@@ -84,8 +84,14 @@ namespace BookTea.Controllers
         // GET: BookAuthors/Create
         public IActionResult Create()
         {
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id");
-            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN");
+            //To get the full name of author
+            var authors = _context.Authors.Select(a => new{
+                Id = a.Id,
+                FullName = a.FirstName + " " + a.LastName
+            }).ToList();
+
+            ViewData["AuthorId"] = new SelectList(authors, "Id", "FullName");
+            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "Title");
             return View();
         }
 
@@ -102,8 +108,15 @@ namespace BookTea.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", bookAuthor.AuthorId);
-            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", bookAuthor.BookId);
+
+            //To get the full name of author
+            var authors = _context.Authors.Select(a => new {
+                Id = a.Id,
+                FullName = a.FirstName + " " + a.LastName
+            }).ToList();
+
+            ViewData["AuthorId"] = new SelectList(authors, "Id", "FullName", bookAuthor.AuthorId);
+            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "Title", bookAuthor.BookId);
             return View(bookAuthor);
         }
 
@@ -148,7 +161,7 @@ namespace BookTea.Controllers
 
         private bool BookAuthorExists(int id)
         {
-          return (_context.BooksAuthors?.Any(e => e.BookId == id)).GetValueOrDefault();
+            return (_context.BooksAuthors?.Any(e => e.BookId == id)).GetValueOrDefault();
         }
     }
 }

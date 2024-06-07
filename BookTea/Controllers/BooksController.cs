@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BookTea.Context;
 using BookTea.Models;
+using System.Diagnostics.Metrics;
 
 namespace BookTea.Controllers
 {
@@ -112,7 +113,7 @@ namespace BookTea.Controllers
         // GET: Books/Create
         public IActionResult Create()
         {
-            ViewData["PublishingHouseId"] = new SelectList(_context.PublishingHouses, "Id", "Id");
+            ViewData["PublishingHouse"] = new SelectList(_context.PublishingHouses, "Id", "Name");
             return View();
         }
 
@@ -130,7 +131,7 @@ namespace BookTea.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PublishingHouseId"] = new SelectList(_context.PublishingHouses, "Id", "Id", book.PublishingHouseId);
+            ViewData["PublishingHouse"] = new SelectList(_context.PublishingHouses, "Id", "Name", book.PublishingHouseId);
             return View(book);
         }
 
@@ -249,6 +250,24 @@ namespace BookTea.Controllers
                 }
             }
             return uniqueFileName;
+        }
+
+        private List<SelectListItem> GetPublishingHouse()
+        {
+            var LstPublishingHouse = new List<SelectListItem>();
+            List<PublishingHouse> PublishingHouses = _context.PublishingHouses.ToList();
+            LstPublishingHouse = PublishingHouses.Select(ph => new SelectListItem()
+            {
+                Value = ph.Id.ToString(),
+                Text = ph.Name
+            }).ToList();
+            var DefItem = new SelectListItem()
+            {
+                Value = "",
+                Text = "---Select Publishing House---"
+            };
+            LstPublishingHouse.Insert(0, DefItem);
+            return LstPublishingHouse;
         }
     }
 }
