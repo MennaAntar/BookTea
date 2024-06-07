@@ -77,4 +77,19 @@ else{
 }
     </tbody>
 </table>
+
+    <div class="d-flex justify-content-end">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item @(ViewBag.CurrentPage==1?"disabled":"")"><a class="page-link asp-action="Index" asp-route-CurrentPage="@(ViewBag.CurrentPage-1)" asp-route-term="@ViewBag.term" asp-route-orderby="@ViewBag.orderby">Previous</a></li>
+                @for (int i = 1; i <= ViewBag.NumPages; i++)
+                {
+                    <li class="page-item @(i==ViewBag.CurrentPage?"active":"")">
+                        <a class="page-link" asp-action="Index" asp-route-CurrentPage="@i" asp-route-term="@ViewBag.term" asp-route-orderby="@ViewBag.orderby">@i</a>
+                    </li>
+                }
+                <li class="page-item @(ViewBag.CurrentPage==ViewBag.NumPages?"disabled":"")"><a class="page-link" asp-action="Index" asp-route-CurrentPage="@(ViewBag.CurrentPage+1)" asp-route-term="@ViewBag.term" asp-route-orderby="@ViewBag.orderby">Next</a></li>
+            </ul>
+        </nav>
+    </div>
 }

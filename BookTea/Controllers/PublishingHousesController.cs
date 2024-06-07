@@ -19,30 +19,8 @@ namespace BookTea.Controllers
             _context = context;
         }
 
-        /*
         // GET: PublishingHouses
-        public async Task<IActionResult> Index(string term)
-        {
-            var author = await _context.PublishingHouses.ToListAsync();
-            if (!String.IsNullOrEmpty(term))
-            {
-                author = author.Where(a => a.Id.ToString().Contains(term) || a.Country.Contains(term) || a.Name.Contains(term)).ToList();
-<<<<<<< HEAD
-=======
-
-            }
-
-            return View(author);
-        }
->>>>>>> a3e681b4628bb495d16b8772369654bf5fca1f79
-
-            }
-
-            return View(author);
-        }
-        */
-        // GET: PublishingHouses
-        public async Task<IActionResult> Index(string term, string orderby)
+        public async Task<IActionResult> Index(string term, string orderby, int CurrentPage = 1)
         {
             var publishingHouses = await _context.PublishingHouses.ToListAsync();
             //Search
@@ -83,6 +61,15 @@ namespace BookTea.Controllers
                     publishingHouses = publishingHouses.OrderBy(p => p.Id).ToList();
                     break;
             }
+
+            //Pagination
+            const int PageSize = 5;
+            int TotalRecords = publishingHouses.Count;
+            int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
+            ViewBag.NumPages = NumPages;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalRecords = TotalRecords;
+            publishingHouses = publishingHouses.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
 
             return View(publishingHouses);
         }

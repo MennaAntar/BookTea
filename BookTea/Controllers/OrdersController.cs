@@ -22,7 +22,6 @@ namespace BookTea.Controllers
         // GET: Orders
         public async Task<IActionResult> Index(string term , string orderby= "TotalCost")
         {
-            // @Html.DisplayNameFor(model => model.TotalCost)
             ViewBag.orderCost = orderby == "TotalCost" ? "TotalCost_des" : "TotalCost";
             var author = await _context.Orders.Include(c=>c.Customer).Include(c => c.ShippingCompany).ToListAsync();
             if (!String.IsNullOrEmpty(term))

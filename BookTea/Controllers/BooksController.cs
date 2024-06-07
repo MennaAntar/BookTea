@@ -20,22 +20,9 @@ namespace BookTea.Controllers
             _context = context;
             _webHost = webHost;
         }
-        /*
+        
         // GET: Books
-        public async Task<IActionResult> Index(string term)
-        {
-            var bookAuthors = await _context.Books.Include(c => c.PublishingHouse).ToListAsync();
-            if (!String.IsNullOrEmpty(term))
-            {
-                bookAuthors = bookAuthors.Where(a => a.Description.Contains(term) || a.Price.ToString().Contains(term)|| a.Title.Contains(term)|| a.Rating.ToString().Contains(term)|| a.Quantity.ToString().Contains(term)|| a.ISBN.ToString().Contains(term)|| a.PublishingHouseId.ToString().Contains(term)).ToList();
-
-            }
-            return View(bookAuthors);
-        }
-        */
-        //__________
-        // GET: Books
-        public async Task<IActionResult> Index(string term, string orderby)
+        public async Task<IActionResult> Index(string term, string orderby, int CurrentPage=1)
         {
             var books = await _context.Books.Include(c => c.PublishingHouse).ToListAsync();
             //Search
@@ -91,9 +78,17 @@ namespace BookTea.Controllers
                     break;
             }
 
+            //Pagination
+            const int PageSize = 5;
+            int TotalRecords = books.Count;
+            int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
+            ViewBag.NumPages = NumPages;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalRecords = TotalRecords;
+            books = books.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+
             return View(books);
         }
-        //__________
 
         // GET: Books/Details/5
         public async Task<IActionResult> Details(int? id)

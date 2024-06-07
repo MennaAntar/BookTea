@@ -20,9 +20,10 @@ namespace BookTea.Controllers
         }
 
         // GET: CostSpecifications
-        public async Task<IActionResult> Index(string term, string orderby = "Id")
+        public async Task<IActionResult> Index(string term, string orderby = "Id", int CurrentPage=1)
         {
             var costSpecification = await _context.CostsSpecifications.Include(c => c.ShippingCompany).ToListAsync();
+            //Search
             if (!String.IsNullOrEmpty(term))
             {
                 costSpecification = costSpecification.Where(a => a.CityName.Contains(term)
@@ -59,6 +60,16 @@ namespace BookTea.Controllers
                     costSpecification = costSpecification.OrderBy(a => a.Id).ToList();
                     break;
             }
+
+            //Pagination
+            const int PageSize = 5;
+            int TotalRecords = costSpecification.Count;
+            int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
+            ViewBag.NumPages = NumPages;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalRecords = TotalRecords;
+            costSpecification = costSpecification.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+
             return View(costSpecification);
         }
 

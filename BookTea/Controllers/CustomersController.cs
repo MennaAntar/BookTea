@@ -20,9 +20,11 @@ namespace BookTea.Controllers
         }
 
         // GET: Customers
-        public async Task<IActionResult> Index(string term, string orderby = "Id")
+        public async Task<IActionResult> Index(string term, string orderby = "Id", int CurrentPage = 1)
         {
             var customer = await _context.Customers.ToListAsync();
+
+            //Search
             if (!String.IsNullOrEmpty(term))
             {
                 customer = customer.Where(a => a.Name.Contains(term) ||
@@ -73,6 +75,15 @@ namespace BookTea.Controllers
                     customer = customer.OrderBy(a => a.Id).ToList();
                     break;
             }
+
+            //Pagination
+            const int PageSize = 5;
+            int TotalRecords = customer.Count;
+            int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
+            ViewBag.NumPages = NumPages;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalRecords = TotalRecords;
+            customer = customer.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
 
             return View(customer);
         }

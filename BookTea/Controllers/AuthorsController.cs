@@ -23,7 +23,7 @@ namespace BookTea.Controllers
         }
 
         // GET: Authors
-        public async Task<IActionResult> Index(string term, string orderby = "Id")
+        public async Task<IActionResult> Index(string term, string orderby = "Id", int CurrentPage = 1)
         {
             //Search
             var author = await _context.Authors.ToListAsync();
@@ -77,6 +77,15 @@ namespace BookTea.Controllers
                     author = author.OrderBy(a => a.Id).ToList();
                     break;
             }
+
+            //Pagination
+            const int PageSize = 5;
+            int TotalRecords = author.Count;
+            int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
+            ViewBag.NumPages = NumPages;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalRecords = TotalRecords;
+            author = author.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
 
             return View(author);
         }

@@ -20,7 +20,7 @@ namespace BookTea.Controllers
         }
 
         // GET: BookAuthors
-        public async Task<IActionResult> Index(string term, string orderby)
+        public async Task<IActionResult> Index(string term, string orderby, int CurrentPage = 1)
         {
             //Search
             var bookAuthors = await _context.BooksAuthors.Include(c=>c.Author).Include(c=>c.Book).ToListAsync();
@@ -48,6 +48,16 @@ namespace BookTea.Controllers
                     bookAuthors = bookAuthors.OrderByDescending(a => a.Book.Title).ToList();
                     break;
             }
+
+            //Pagination
+            const int PageSize = 5;
+            int TotalRecords = bookAuthors.Count;
+            int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
+            ViewBag.NumPages = NumPages;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalRecords = TotalRecords;
+            bookAuthors = bookAuthors.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+
             return View(bookAuthors);
         }
 
@@ -96,65 +106,6 @@ namespace BookTea.Controllers
             ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", bookAuthor.BookId);
             return View(bookAuthor);
         }
-
-        //// GET: BookAuthors/Edit/5
-        //public async Task<IActionResult> Edit(int? BookId, int? AuthorId)
-        //{
-        //    if (BookId==null|| AuthorId==null || _context.BooksAuthors == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    var bookAuthor = await _context.BooksAuthors
-        //        .Include(b => b.Author)
-        //        .Include(b => b.Book)
-        //        .FirstOrDefaultAsync(m => m.BookId == BookId && m.AuthorId == AuthorId);
-
-        //    if (bookAuthor == null)
-        //    {
-        //        return NotFound();
-        //    }
-        //    ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", bookAuthor.AuthorId);
-        //    ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", bookAuthor.BookId);
-        //    return View(bookAuthor);
-        //}
-
-        //// POST: BookAuthors/Edit/5
-        //// To protect from overposting attacks, enable the specific properties you want to bind to.
-        //// For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> Edit(int? BookId, int? AuthorId, [Bind("BookId,AuthorId")] BookAuthor bookAuthor)
-        //{
-        //    if (BookId != bookAuthor.BookId||AuthorId!=bookAuthor.AuthorId)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _context.Update(bookAuthor);
-        //            await _context.SaveChangesAsync();
-        //        }
-        //        catch (DbUpdateConcurrencyException)
-        //        {
-        //            if (!BookAuthorExists(bookAuthor.BookId))
-        //            {
-        //                return NotFound();
-        //            }
-        //            else
-        //            {
-        //                throw;
-        //            }
-        //        }
-        //        return RedirectToAction(nameof(Index));
-        //    }
-        //    ViewData["AuthorId"] = new SelectList(_context.Authors, "Id", "Id", bookAuthor.AuthorId);
-        //    ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", bookAuthor.BookId);
-        //    return View(bookAuthor);
-        //}
 
         // GET: BookAuthors/Delete/5
         public async Task<IActionResult> Delete(int? BookId, int? AuthorId)

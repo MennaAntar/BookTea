@@ -20,8 +20,9 @@ namespace BookTea.Controllers
         }
 
         // GET: ShippingCompanies
-        public async Task<IActionResult> Index(string term, string orderby = "Id")
+        public async Task<IActionResult> Index(string term, string orderby = "Id", int CurrentPage = 1)
         {
+            //Search
             var shipingCompany = await _context.ShippingCompanies.ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
@@ -66,6 +67,15 @@ namespace BookTea.Controllers
                     shipingCompany = shipingCompany.OrderBy(a => a.Id).ToList();
                     break;
             }
+
+            //Pagination
+            const int PageSize = 5;
+            int TotalRecords = shipingCompany.Count;
+            int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
+            ViewBag.NumPages = NumPages;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalRecords = TotalRecords;
+            shipingCompany = shipingCompany.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
 
             return View(shipingCompany);
         }

@@ -20,9 +20,11 @@ namespace BookTea.Controllers
         }
 
         // GET: Payments
-        public async Task<IActionResult> Index(string term, string orderby = "Id")
+        public async Task<IActionResult> Index(string term, string orderby = "Id", int CurrentPage = 1)
         {
             var payments = await _context.Payments.Include(c => c.Order).ToListAsync();
+
+            //Search
             if (!String.IsNullOrEmpty(term))
             {
                 payments = payments.Where(a => a.Cost.ToString().Contains(term)
@@ -66,6 +68,16 @@ namespace BookTea.Controllers
                     payments = payments.OrderBy(a => a.Id).ToList();
                     break;
             }
+
+            //Pagination
+            const int PageSize = 5;
+            int TotalRecords = payments.Count;
+            int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
+            ViewBag.NumPages = NumPages;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalRecords = TotalRecords;
+            payments = payments.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+
             return View(payments);
         }
 
