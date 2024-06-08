@@ -114,7 +114,6 @@ namespace BookTea.Controllers
                 Id = a.Id,
                 FullName = a.FirstName + " " + a.LastName
             }).ToList();
-
             ViewData["AuthorId"] = new SelectList(authors, "Id", "FullName", bookAuthor.AuthorId);
             ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "Title", bookAuthor.BookId);
             return View(bookAuthor);

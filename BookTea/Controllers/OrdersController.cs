@@ -22,12 +22,18 @@ namespace BookTea.Controllers
         // GET: Orders
         public async Task<IActionResult> Index(string term , string orderby= "TotalCost", int CurrentPage = 1)
         {
+            if (!string.IsNullOrEmpty(term))
+                ViewBag.term = term;
+
+            ViewBag.orderby = orderby;
+            if (ViewBag.orderby != null)
+                orderby = ViewBag.orderby;
             ViewBag.orderCost = orderby == "TotalCost" ? "TotalCost_des" : "TotalCost";
             //Search
             var order = await _context.Orders.Include(c=>c.Customer).Include(c => c.ShippingCompany).ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
-                order = order.Where(a => a.Id.ToString().Contains(term) || a.TotalCost.ToString().Contains(term) || a.ShippingCompanyId.ToString().Contains(term) || a.RequestDate.ToString().Contains(term)).ToList();
+                order = order.Where(a => a.Id.ToString().Contains(term) || a.TotalCost.ToString().Contains(term) || a.ShippingCompany.Destination.ToString().Contains(term) || a.RequestDate.ToString().Contains(term) || a.Customer.Name.ToString().Contains(term)).ToList();
 
             }
 
@@ -43,6 +49,7 @@ namespace BookTea.Controllers
             }
 
             //Pagination
+
             const int PageSize = 5;
             int TotalRecords = order.Count;
             int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
@@ -253,7 +260,7 @@ namespace BookTea.Controllers
                     return RedirectToAction(nameof(MoreDetails), new { id = order.Id });
                 }
             }
-            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", orderLine.BookId);
+            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "Title", orderLine.BookId);
             ViewData["OrderId"] = orderLine.OrderId;
             return View(orderLine);
         }
