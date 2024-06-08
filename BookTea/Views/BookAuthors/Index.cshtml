@@ -45,7 +45,6 @@ else{
                 @Html.DisplayFor(modelItem => item.Author.FirstName) @Html.DisplayFor(modelItem => item.Author.LastName)
             </td>
             <td>
-                        @* @Html.ActionLink("Edit", "Edit", new { BookId = item.BookId, AuthorId = item.AuthorId }) | *@
                         @Html.ActionLink("Details", "Details", new { BookId = item.BookId, AuthorId = item.AuthorId }) |
                         @Html.ActionLink("Delete", "Delete", new { BookId = item.BookId, AuthorId = item.AuthorId })
             </td>

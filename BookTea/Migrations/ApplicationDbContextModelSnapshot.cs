@@ -176,8 +176,8 @@ namespace BookTea.Migrations
                     b.Property<int>("ShippingCompanyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalCost")
-                        .HasColumnType("int");
+                    b.Property<double>("TotalCost")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -202,14 +202,10 @@ namespace BookTea.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<string>("ProductName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
                     b.Property<int>("ProductQuantityRequired")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TotalProductPrice")
                         .HasColumnType("int");
 
                     b.HasKey("OL_Id");

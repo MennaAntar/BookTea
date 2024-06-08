@@ -95,7 +95,11 @@ namespace BookTea.Controllers
         // GET: CostSpecifications/Create
         public IActionResult Create()
         {
-            ViewData["ShippingCompanyId"] = new SelectList(_context.ShippingCompanies, "Id", "Id");
+            var SC = _context.ShippingCompanies.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Destination + " " + a.Weight.ToString()
+            }).ToList();
+            ViewData["ShippingCompanyId"] = new SelectList(SC, "Id", "FullDetails");
             return View();
         }
 
@@ -112,7 +116,13 @@ namespace BookTea.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ShippingCompanyId"] = new SelectList(_context.ShippingCompanies, "Id", "Id", costSpecification.ShippingCompanyId);
+
+            var SC = _context.ShippingCompanies.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Destination + " " + a.Weight.ToString()
+            }).ToList();
+            ViewData["ShippingCompanyId"] = new SelectList(SC, "Id", "FullDetails");
+            
             return View(costSpecification);
         }
 
@@ -129,7 +139,12 @@ namespace BookTea.Controllers
             {
                 return NotFound();
             }
-            ViewData["ShippingCompanyId"] = new SelectList(_context.ShippingCompanies, "Id", "Id", costSpecification.ShippingCompanyId);
+            var SC = _context.ShippingCompanies.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Destination + " " + a.Weight.ToString()
+            }).ToList();
+            ViewData["ShippingCompanyId"] = new SelectList(SC, "Id", "FullDetails");
+
             return View(costSpecification);
         }
 
@@ -165,7 +180,11 @@ namespace BookTea.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ShippingCompanyId"] = new SelectList(_context.ShippingCompanies, "Id", "Id", costSpecification.ShippingCompanyId);
+            var SC = _context.ShippingCompanies.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Destination + " " + a.Weight.ToString()
+            }).ToList();
+            ViewData["ShippingCompanyId"] = new SelectList(SC, "Id", "FullDetails");
             return View(costSpecification);
         }
 

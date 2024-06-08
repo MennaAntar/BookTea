@@ -3,7 +3,7 @@
     public class Order
     {
         public int Id { get; set; }
-        public int TotalCost { get; set; }
+        public double TotalCost { get; set; }
         public DateTime RequestDate { get; set; }
 
         //FK

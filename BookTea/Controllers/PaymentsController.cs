@@ -103,7 +103,11 @@ namespace BookTea.Controllers
         // GET: Payments/Create
         public IActionResult Create()
         {
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id");
+            var order = _context.Orders.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Customer.Name + " " + a.RequestDate.ToString()
+            }).ToList();
+            ViewData["OrderId"] = new SelectList(order, "Id", "FullDetails");
             return View();
         }
 
@@ -120,7 +124,11 @@ namespace BookTea.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", payment.OrderId);
+            var order = _context.Orders.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Customer.Name + " " + a.RequestDate.ToString()
+            }).ToList();
+            ViewData["OrderId"] = new SelectList(order, "Id", "FullDetails",payment.OrderId);
             return View(payment);
         }
 
@@ -137,7 +145,11 @@ namespace BookTea.Controllers
             {
                 return NotFound();
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", payment.OrderId);
+            var order = _context.Orders.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Customer.Name + " " + a.RequestDate.ToString()
+            }).ToList();
+            ViewData["OrderId"] = new SelectList(order, "Id", "FullDetails",payment.OrderId);
             return View(payment);
         }
 
@@ -173,7 +185,11 @@ namespace BookTea.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["OrderId"] = new SelectList(_context.Orders, "Id", "Id", payment.OrderId);
+            var order = _context.Orders.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Customer.Name + " " + a.RequestDate.ToString()
+            }).ToList();
+            ViewData["OrderId"] = new SelectList(order, "Id", "FullDetails", payment.OrderId);
             return View(payment);
         }
 

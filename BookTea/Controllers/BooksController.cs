@@ -148,7 +148,7 @@ namespace BookTea.Controllers
             {
                 return NotFound();
             }
-            ViewData["PublishingHouseId"] = new SelectList(_context.PublishingHouses, "Id", "Id", book.PublishingHouseId);
+            ViewData["PublishingHouseId"] = new SelectList(_context.PublishingHouses, "Id", "Name", book.PublishingHouseId);
             return View(book);
         }
 
@@ -189,7 +189,7 @@ namespace BookTea.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["PublishingHouseId"] = new SelectList(_context.PublishingHouses, "Id", "Id", book.PublishingHouseId);
+            ViewData["PublishingHouseId"] = new SelectList(_context.PublishingHouses, "Id", "Name", book.PublishingHouseId);
             return View(book);
         }
 

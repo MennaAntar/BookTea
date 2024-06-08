@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookTea.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240512184420_iwannaseeDataBase")]
-    partial class iwannaseeDataBase
+    [Migration("20240608154019_Create")]
+    partial class Create
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -179,8 +179,8 @@ namespace BookTea.Migrations
                     b.Property<int>("ShippingCompanyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalCost")
-                        .HasColumnType("int");
+                    b.Property<double>("TotalCost")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -205,10 +205,10 @@ namespace BookTea.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductQuantityRequired")
-                        .HasColumnType("int");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
-                    b.Property<int>("TotalProductPrice")
+                    b.Property<int>("ProductQuantityRequired")
                         .HasColumnType("int");
 
                     b.HasKey("OL_Id");

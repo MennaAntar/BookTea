@@ -20,26 +20,38 @@ namespace BookTea.Controllers
         }
 
         // GET: Orders
-        public async Task<IActionResult> Index(string term , string orderby= "TotalCost")
+        public async Task<IActionResult> Index(string term , string orderby= "TotalCost", int CurrentPage = 1)
         {
             ViewBag.orderCost = orderby == "TotalCost" ? "TotalCost_des" : "TotalCost";
-            var author = await _context.Orders.Include(c=>c.Customer).Include(c => c.ShippingCompany).ToListAsync();
+            //Search
+            var order = await _context.Orders.Include(c=>c.Customer).Include(c => c.ShippingCompany).ToListAsync();
             if (!String.IsNullOrEmpty(term))
             {
-                author = author.Where(a => a.Id.ToString().Contains(term) || a.TotalCost.ToString().Contains(term) || a.ShippingCompanyId.ToString().Contains(term) || a.RequestDate.ToString().Contains(term)).ToList();
+                order = order.Where(a => a.Id.ToString().Contains(term) || a.TotalCost.ToString().Contains(term) || a.ShippingCompanyId.ToString().Contains(term) || a.RequestDate.ToString().Contains(term)).ToList();
 
             }
+
+            //sort
             switch (orderby)
             {
                 case "TotalCost":
-                    author = author.OrderBy(orl => orl.TotalCost).ToList();
+                    order = order.OrderBy(orl => orl.TotalCost).ToList();
                     break;
                 case "TotalCost_des":
-                    author = author.OrderByDescending(orl => orl.TotalCost).ToList();
+                    order = order.OrderByDescending(orl => orl.TotalCost).ToList();
                     break;
             }
 
-            return View(author);
+            //Pagination
+            const int PageSize = 5;
+            int TotalRecords = order.Count;
+            int NumPages = (int)Math.Ceiling(Convert.ToDecimal(TotalRecords / (decimal)PageSize));
+            ViewBag.NumPages = NumPages;
+            ViewBag.CurrentPage = CurrentPage;
+            ViewBag.TotalRecords = TotalRecords;
+            order = order.Skip((CurrentPage - 1) * PageSize).Take(PageSize).ToList();
+
+            return View(order);
         }
 
         // GET: Orders/Details/5
@@ -65,8 +77,13 @@ namespace BookTea.Controllers
         // GET: Orders/Create
         public IActionResult Create()
         {
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id");
-            ViewData["ShippingCompanyId"] = new SelectList(_context.ShippingCompanies, "Id", "Id");
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name");
+
+            var SC = _context.ShippingCompanies.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Destination +" "+a.Weight.ToString()
+            }).ToList();
+            ViewData["ShippingCompanyId"] = new SelectList(SC, "Id", "FullDetails");
             return View();
         }
 
@@ -75,16 +92,22 @@ namespace BookTea.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,TotalCost,RequestDate,ShippingCompanyId,CustomerId")] Order order)
+        public async Task<IActionResult> Create([Bind("Id,RequestDate,ShippingCompanyId,CustomerId")] Order order)
         {
             if (ModelState.IsValid)
             {
+                order.TotalCost = 0;
+                order.RequestDate = DateTime.Now;
                 _context.Add(order);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", order.CustomerId);
-            ViewData["ShippingCompanyId"] = new SelectList(_context.ShippingCompanies, "Id", "Id", order.ShippingCompanyId);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", order.CustomerId);
+            var SC = _context.ShippingCompanies.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Destination +" "+a.Weight.ToString()
+            }).ToList();
+            ViewData["ShippingCompanyId"] = new SelectList(SC, "Id", "FullDetails");
             return View(order);
         }
 
@@ -101,8 +124,12 @@ namespace BookTea.Controllers
             {
                 return NotFound();
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", order.CustomerId);
-            ViewData["ShippingCompanyId"] = new SelectList(_context.ShippingCompanies, "Id", "Id", order.ShippingCompanyId);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", order.CustomerId);
+            var SC = _context.ShippingCompanies.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Destination + " " + a.Weight.ToString()
+            }).ToList();
+            ViewData["ShippingCompanyId"] = new SelectList(SC, "Id", "FullDetails");
             return View(order);
         }
 
@@ -138,8 +165,12 @@ namespace BookTea.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Id", order.CustomerId);
-            ViewData["ShippingCompanyId"] = new SelectList(_context.ShippingCompanies, "Id", "Id", order.ShippingCompanyId);
+            ViewData["CustomerId"] = new SelectList(_context.Customers, "Id", "Name", order.CustomerId);
+            var SC = _context.ShippingCompanies.Select(a => new {
+                Id = a.Id,
+                FullDetails = a.Destination + " " + a.Weight.ToString()
+            }).ToList();
+            ViewData["ShippingCompanyId"] = new SelectList(SC, "Id", "FullDetails");
             return View(order);
         }
 
@@ -185,6 +216,92 @@ namespace BookTea.Controllers
         private bool OrderExists(int id)
         {
           return (_context.Orders?.Any(e => e.Id == id)).GetValueOrDefault();
+        }
+
+        //---------------------Order line-------------------------
+        public IActionResult MoreDetails(int id)
+        {
+            var order = _context.Orders.Where(x => x.Id == id).Include(o => o.Customer).Include(o => o.OrderLines).ThenInclude(ol => ol.Book).FirstOrDefault();
+            
+            return View(order);
+        }
+        
+        public IActionResult CreateOrderLine(int orderId)
+        {
+            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "Title");
+            var model = new OrderLine { OrderId = orderId };
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CreateOrderLine([Bind("OL_Id,ProductQuantityRequired,Price,BookId,OrderId")] OrderLine orderLine)
+        {
+            if (ModelState.IsValid)
+            {
+                var Book = _context.Books.Where(b => b.ISBN == orderLine.BookId).FirstOrDefault();
+                var order = _context.Orders.Where(o => o.Id == orderLine.OrderId).FirstOrDefault();
+                if (orderLine.ProductQuantityRequired <= Book?.Quantity)
+                {
+                    orderLine.Price = orderLine.ProductQuantityRequired * Book.Price;
+                    Book.Quantity-=orderLine.ProductQuantityRequired;
+                    order.TotalCost += orderLine.Price;
+                    _context.Update(Book);
+                    _context.Update(order);
+                    _context.Add(orderLine);
+                    await _context.SaveChangesAsync();
+                    return RedirectToAction(nameof(MoreDetails), new { id = order.Id });
+                }
+            }
+            ViewData["BookId"] = new SelectList(_context.Books, "ISBN", "ISBN", orderLine.BookId);
+            ViewData["OrderId"] = orderLine.OrderId;
+            return View(orderLine);
+        }
+
+        public async Task<IActionResult> DeleteOrderLine(int? id)
+        {
+            if (id == null || _context.OrderLines == null)
+            {
+                return NotFound();
+            }
+
+            var orderLine = await _context.OrderLines
+                .Include(o => o.Book)
+                .Include(o => o.Order)
+                .FirstOrDefaultAsync(m => m.OL_Id == id);
+            if (orderLine == null)
+            {
+                return NotFound();
+            }
+
+            return View(orderLine);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteOrderLine(int id)
+        {
+            if (_context.OrderLines == null)
+            {
+                return Problem("Entity set 'ApplicationDbContext.OrderLines'  is null.");
+            }
+            var orderLine = await _context.OrderLines.FindAsync(id);
+            if (orderLine != null)
+            {
+
+                var Book = _context.Books.Where(b => b.ISBN == orderLine.BookId).FirstOrDefault();
+                var order = _context.Orders.Where(o => o.Id == orderLine.OrderId).FirstOrDefault();
+                Book.Quantity += orderLine.ProductQuantityRequired;
+                order.TotalCost -= orderLine.Price;
+                _context.Update(Book);
+                _context.Update(order);
+                _context.OrderLines.Remove(orderLine);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(MoreDetails), new { id = orderLine.OrderId });
+
+            }
+
+            return NotFound();
         }
     }
 }
