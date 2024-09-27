@@ -12,17 +12,18 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BookTea.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240406231414_Creation")]
-    partial class Creation
+    [Migration("20240608154019_Create")]
+    partial class Create
     {
+        /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.28")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("BookTea.Models.Author", b =>
                 {
@@ -30,7 +31,7 @@ namespace BookTea.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
@@ -61,7 +62,7 @@ namespace BookTea.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ISBN"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("ISBN"));
 
                     b.Property<string>("Description")
                         .HasColumnType("nvarchar(max)");
@@ -78,8 +79,8 @@ namespace BookTea.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
-                    b.Property<int>("Rating")
-                        .HasColumnType("int");
+                    b.Property<double>("Rating")
+                        .HasColumnType("float");
 
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
@@ -112,7 +113,7 @@ namespace BookTea.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("CityName")
                         .HasColumnType("nvarchar(max)");
@@ -136,7 +137,7 @@ namespace BookTea.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Address")
                         .HasColumnType("nvarchar(max)");
@@ -167,7 +168,7 @@ namespace BookTea.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("CustomerId")
                         .HasColumnType("int");
@@ -178,8 +179,8 @@ namespace BookTea.Migrations
                     b.Property<int>("ShippingCompanyId")
                         .HasColumnType("int");
 
-                    b.Property<int>("TotalCost")
-                        .HasColumnType("int");
+                    b.Property<double>("TotalCost")
+                        .HasColumnType("float");
 
                     b.HasKey("Id");
 
@@ -196,7 +197,7 @@ namespace BookTea.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OL_Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("OL_Id"));
 
                     b.Property<int>("BookId")
                         .HasColumnType("int");
@@ -204,10 +205,10 @@ namespace BookTea.Migrations
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
-                    b.Property<int>("ProductQuantityRequired")
-                        .HasColumnType("int");
+                    b.Property<double>("Price")
+                        .HasColumnType("float");
 
-                    b.Property<int>("TotalProductPrice")
+                    b.Property<int>("ProductQuantityRequired")
                         .HasColumnType("int");
 
                     b.HasKey("OL_Id");
@@ -225,7 +226,7 @@ namespace BookTea.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Cost")
                         .HasColumnType("int");
@@ -253,7 +254,7 @@ namespace BookTea.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Country")
                         .HasColumnType("nvarchar(max)");
@@ -272,7 +273,7 @@ namespace BookTea.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<int>("Cost")
                         .HasColumnType("int");

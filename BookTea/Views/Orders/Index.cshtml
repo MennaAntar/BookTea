@@ -1,0 +1,85 @@
+﻿@model IEnumerable<BookTea.Models.Order>
+
+@{
+    ViewData["Title"] = "Index";
+}
+@if (Model == null || Model.Count() == 0)
+{
+    <div class="alert alert-warning" role="alert">
+        <h4 class="alert-heading">Oh no!!!</h4>
+        <p>Sorry! There is no orders yet!</p>
+        <hr>
+        <a asp-action="Create">Create Orders</a>
+    </div>
+}
+else{
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+    <form asp-action="Index" method="get">
+        <input style="width:400px" name="term" class="d-inline form-control" placeholder="Search...." type="text" />
+        <button type="submit" class="d-inline btn btn-outline-primary">Search</button>
+    </form>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                    <a asp-action="Index" asp-route-orderby="@ViewBag.orderCost">Cost</a>
+
+               
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.RequestDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ShippingCompany)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Customer)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalCost)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.RequestDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ShippingCompany.Destination)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Customer.Name)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="MoreDetails" asp-route-id="@item.Id">More Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+    <div class="d-flex justify-content-end">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item @(ViewBag.CurrentPage==1?"disabled":"")"><a class="page-link asp-action="Index" asp-route-CurrentPage="@(ViewBag.CurrentPage-1)" asp-route-term="@ViewBag.term" asp-route-orderby="@ViewBag.orderby">Previous</a></li>
+                @for (int i = 1; i <= ViewBag.NumPages; i++)
+                {
+                    <li class="page-item @(i==ViewBag.CurrentPage?"active":"")">
+                        <a class="page-link" asp-action="Index" asp-route-CurrentPage="@i" asp-route-term="@ViewBag.term" asp-route-orderby="@ViewBag.orderby">@i</a>
+                    </li>
+                }
+                <li class="page-item @(ViewBag.CurrentPage==ViewBag.NumPages?"disabled":"")"><a class="page-link" asp-action="Index" asp-route-CurrentPage="@(ViewBag.CurrentPage+1)" asp-route-term="@ViewBag.term" asp-route-orderby="@ViewBag.orderby">Next</a></li>
+            </ul>
+        </nav>
+    </div>
+}

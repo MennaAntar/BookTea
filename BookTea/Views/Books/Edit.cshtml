@@ -1,0 +1,92 @@
+﻿@model BookTea.Models.Book
+
+@{
+    ViewData["Title"] = "Edit";
+}
+<style>
+    .custom-file-button input[type=file] {
+        margin-left: -2px !important;
+    }
+
+        .custom-file-button input[type=file]::-webkit-file-upload-button {
+            display: none;
+        }
+
+        .custom-file-button input[type=file]::file-selector-button {
+            display: none;
+        }
+
+    .custom-file-button:hover label {
+        background-color: #dde0e3;
+        cursor: pointer;
+    }
+</style>
+
+<h1>Edit</h1>
+
+<h4>Book</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="ISBN" />
+            <div class="form-group">
+                <label asp-for="Title" class="control-label"></label>
+                <input asp-for="Title" class="form-control" />
+                <span asp-validation-for="Title" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Price" class="control-label"></label>
+                <input asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Rating" class="control-label"></label>
+                <input asp-for="Rating" class="form-control" />
+                <span asp-validation-for="Rating" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Description" class="control-label"></label>
+                <input asp-for="Description" class="form-control" />
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Quantity" class="control-label"></label>
+                <input asp-for="Quantity" class="form-control" />
+                <span asp-validation-for="Quantity" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="PublishingHouseId" class="control-label"></label>
+                <select asp-for="PublishingHouseId" class="form-control" asp-items="ViewBag.PublishingHouseId"></select>
+                <span asp-validation-for="PublishingHouseId" class="text-danger"></span>
+            </div>
+            <div class="col-md-12 btn-group pb-2">
+                <div class="form-group col-4 p-0">
+                    <label asp-for="ImageFile" class="control-label"></label>
+                    <img id="PreviewPhoto" src="~/Images/@Model.PhotoUrl" alt="Logo Image" width="125" height="125" />
+                    <span asp-validation-for="PhotoUrl" class="text-danger"></span>
+                </div>
+                <div class="col-1 p-0">
+                </div>
+                <div class="form-group col-7 p-0">
+                    <div class="input-group custom-file-button mt-5 pt-5">
+                        <input asp-for="ImageFile" class="form-control custom-file-input" id="customFile" />
+                        <label class="input-group-text" for="customFile">Browse</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

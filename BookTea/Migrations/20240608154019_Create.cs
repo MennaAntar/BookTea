@@ -5,8 +5,10 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace BookTea.Migrations
 {
-    public partial class Creation : Migration
+    /// <inheritdoc />
+    public partial class Create : Migration
     {
+        /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
@@ -84,7 +86,7 @@ namespace BookTea.Migrations
                     Title = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Price = table.Column<double>(type: "float", nullable: false),
                     PhotoUrl = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    Rating = table.Column<int>(type: "int", nullable: false),
+                    Rating = table.Column<double>(type: "float", nullable: false),
                     Description = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     Quantity = table.Column<int>(type: "int", nullable: false),
                     PublishingHouseId = table.Column<int>(type: "int", nullable: false)
@@ -127,7 +129,7 @@ namespace BookTea.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TotalCost = table.Column<int>(type: "int", nullable: false),
+                    TotalCost = table.Column<double>(type: "float", nullable: false),
                     RequestDate = table.Column<DateTime>(type: "datetime2", nullable: false),
                     ShippingCompanyId = table.Column<int>(type: "int", nullable: false),
                     CustomerId = table.Column<int>(type: "int", nullable: false)
@@ -177,16 +179,16 @@ namespace BookTea.Migrations
                 name: "OrderLines",
                 columns: table => new
                 {
-                    OL_Id = table.Column<int>(type: "int", nullable: false)
+                    OLId = table.Column<int>(name: "OL_Id", type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    TotalProductPrice = table.Column<int>(type: "int", nullable: false),
                     ProductQuantityRequired = table.Column<int>(type: "int", nullable: false),
+                    Price = table.Column<double>(type: "float", nullable: false),
                     BookId = table.Column<int>(type: "int", nullable: false),
                     OrderId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_OrderLines", x => x.OL_Id);
+                    table.PrimaryKey("PK_OrderLines", x => x.OLId);
                     table.ForeignKey(
                         name: "FK_OrderLines_Books_BookId",
                         column: x => x.BookId,
@@ -265,6 +267,7 @@ namespace BookTea.Migrations
                 unique: true);
         }
 
+        /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropTable(
